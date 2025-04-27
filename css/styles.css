@@ -1,0 +1,331 @@
+/* Basic Reset and Font Import */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
+
+body {
+  background-color: #f5f4ee;
+}
+
+/* Hero */
+.hero {
+  background-color: #347444;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  padding: 50px 100px;
+}
+
+.hero-content {
+  max-width: 50%;
+}
+
+.hero-content h1 {
+  font-size: 3rem;
+  line-height: 1.2;
+  margin-bottom: 15px;
+}
+
+.hero-content p {
+  font-size: 1.2rem;
+  margin-bottom: 25px;
+}
+
+.hero-buttons {
+  display: flex;
+  gap: 15px;
+}
+
+.primary-btn, .secondary-btn {
+  padding: 10px 25px;
+  border-radius: 16px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.primary-btn {
+  background-color: #e5f6e5;
+  color: #347444;
+  border: none;
+}
+
+.secondary-btn {
+  background-color: transparent;
+  border: 1px solid #e5f6e5;
+  color: #e5f6e5;
+}
+
+.primary-btn:hover, .secondary-btn:hover {
+  transform: translateY(-3px);
+}
+
+.secondary-btn:hover {
+  background-color: #e5f6e5;
+  color: #347444;
+}
+
+.hero-image img {
+  width: 350px;
+  height: auto;
+}
+
+/* What We Do Section */
+.what-we-do {
+  padding: 60px 40px;
+  text-align: center;
+}
+
+.section-header h2 {
+  font-size: 2.5rem;
+  color: #347444;
+  margin-bottom: 10px;
+}
+
+.section-header p {
+  font-size: 1.1rem;
+  color: #666;
+  margin-bottom: 40px;
+}
+
+.features {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 30px;
+}
+
+.feature-card {
+  background-color: #ffffff;
+  padding: 30px 20px;
+  width: 240px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  transition: transform 0.3s ease;
+}
+
+.feature-card:hover {
+  transform: translateY(-2px);
+}
+
+.icon img {
+  width: 50px;
+  margin-bottom: 20px;
+}
+
+.feature-card h3 {
+  font-size: 1.3rem;
+  color: #347444;
+}
+
+.feature-card p {
+  font-size: 0.95rem;
+  color: #444;
+}
+
+/* How it works */
+.how-it-works {
+  padding: 60px 40px;
+  text-align: center;
+}
+
+.how-it-works h2 {
+  color: #347444;
+  font-size: 2rem;
+  margin-bottom: 40px;
+}
+
+.steps-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 25px;
+  flex-wrap: wrap;
+}
+
+.step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 150px;
+}
+
+.step i {
+  font-size: 2.5rem;
+  margin-bottom: 10px;
+  color: #347444;
+}
+
+.step h3 {
+  font-size: 1rem;
+  color: #1e5f3c;
+  margin-bottom: 4px;
+}
+
+.step p {
+  font-size: 0.85rem;
+  color: #444;
+  margin: 0;
+}
+
+.step p a {
+  color: #347444;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.arrow {
+  font-size: 2rem;
+  color: #347444;
+  font-weight: bold;
+}
+
+/* Make a difference */
+.make-difference {
+  background-color: #E5F6E5; /* light green */
+  padding: 60px 40px;
+  text-align: center;
+}
+
+.cta-container {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.cta-text h2 {
+  font-size: 2rem;
+  color: #347444;
+  margin-bottom: 10px;
+}
+
+.cta-text p {
+  font-size: 1.1rem;
+  color: #444;
+  margin-bottom: 30px;
+}
+
+.cta-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.btn {
+  padding: 12px 28px;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 0.3s ease-in-out;
+}
+
+.btn-primary {
+  background-color: #347444;
+  color: #fff;
+  border: none;
+}
+
+.btn-primary:hover {
+  background-color: #295c39;
+  transform: translateY(-2px);
+}
+
+.btn-outline {
+  background-color: transparent;
+  color: #347444;
+  border: 2px solid #347444;
+}
+
+.btn-outline:hover {
+  background-color: #d6ecd6;
+  transform: translateY(-2px);
+}
+
+/* Media Queries */
+@media (max-width: 992px) {
+  .hero {
+    padding: 40px 20px;
+  }
+
+  .hero-content {
+    max-width: 100%;
+  }
+
+  .hero-content h1 {
+    font-size: 2.2rem;
+  }
+
+  .hero-content p {
+    font-size: 1rem;
+  }
+
+  .primary-btn, 
+  .secondary-btn {
+    font-size: 0.95rem;
+    padding: 9px 22px;
+  }
+
+  .hero-image img {
+    width: 100%;
+    max-width: 350px;
+    height: auto;
+  }
+
+  .charity-cards,
+  .needs-container,
+  .features,
+  .steps-container {
+    justify-content: center;
+  }
+
+  .charity-card-media,
+  .need-card,
+  .feature-card {
+    width: 100%;
+    max-width: 320px;
+  }
+
+  .step {
+    width: 100px;
+  }
+}
+
+@media (max-width: 576px) {
+  .hero-content h1 {
+    font-size: 2rem;
+  }
+
+  .hero-content p {
+    font-size: 1rem;
+  }
+
+  .section-header h2,
+  .how-it-works h2,
+  .featured-needs h2 {
+    font-size: 1.5rem;
+  }
+
+  .btn,
+  .donate-btn {
+    font-size: 0.95rem;
+    padding: 10px 20px;
+  }
+
+  .step {
+    width: 80px;
+  }
+
+  .step i {
+    font-size: 2rem;
+  }
+
+  .site-footer {
+    font-size: 0.85rem;
+  }
+}
