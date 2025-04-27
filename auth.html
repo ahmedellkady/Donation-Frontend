@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Donation Platform - Login</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>login-Page</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/auth.css">
+  <link rel="stylesheet" href="css/components/navbar.css">
+  <link rel="stylesheet" href="css/components/footer.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+
+<body>
+  <div id="navbar"></div>
+
+  <div class="container">
+    <br><br>
+    <input type="checkbox" id="flip">
+    <div class="cover">
+      <div class="front">
+        <img src="Assets/img/front-img.png" alt="">
+      </div>
+    </div>
+    <div class="forms">
+      <div class="form-content">
+        <div class="login-form">
+          <div class="title">Login</div>
+          <form id="loginForm" method="POST">
+            <div class="input-boxes">
+              <div class="input-box">
+                <i class="fas fa-envelope"></i>
+                <input type="text" id="loginEmail" name="Email1" placeholder="Enter your name" required>
+              </div>
+              <div class="input-box">
+                <i class="fas fa-lock"></i>
+                <input type="password" id="loginPassword" name="Password1" placeholder="Enter your password" required>
+              </div>
+              <div class="text"><a href="#">Forgot password?</a></div>
+              <div id="loginError" class="error-message" style="display: none;"></div>
+              <div class="input-box user-type">
+                <label><input type="radio" name="userType" value="donor" required> Donor</label>
+                <label><input type="radio" name="userType" value="charity" required> Charity</label>
+              </div>
+              <div class="button input-box">
+                <input type="submit" id="loginSubmit" value="Login">
+              </div>
+              <div class="text sign-up-text">Don't have an account? <label for="flip">Signup now</label></div>
+            </div>
+          </form>
+        </div>
+        <div class="signup-form">
+          <div class="title">Signup</div>
+          <div id="signupMessage" style="display: none;">NOW YOU HAVE TO LOGIN</div>
+          <form id="signupForm" method="post">
+            <div class="input-boxes">
+
+              <!-- Name -->
+              <div class="input-box">
+                <i class="fas fa-user"></i>
+                <input type="text" id="name" name="name" placeholder="Enter your name" minlength="3" maxlength="20"
+                  required>
+              </div>
+
+              <!-- Email -->
+              <div class="input-box">
+                <i class="fas fa-envelope"></i>
+                <input type="email" id="signupEmail" name="email" placeholder="Enter your email" required>
+              </div>
+
+              <!-- Phone -->
+              <div class="input-box">
+                <i class="fa-solid fa-phone"></i>
+                <input type="tel" id="phone" name="phone" placeholder="Enter your phone number" pattern="[0-9]{11}"
+                  required>
+              </div>
+
+              <!-- Password -->
+              <div class="input-box">
+                <i class="fas fa-lock"></i>
+                <input type="password" id="signupPassword" name="password" placeholder="Enter your password"
+                  minlength="8" required>
+              </div>
+
+              <!-- City Dropdown -->
+              <div class="input-box">
+                <i class="fas fa-city"></i>
+                <select id="city" name="city" required>
+                  <option value="">Select City</option>
+                  <option value="cairo">Cairo</option>
+                  <option value="giza">Giza</option>
+                  <option value="alexandria">Alexandria</option>
+                  <option value="luxor">Luxor</option>
+                  <option value="port-said">Port Said</option>
+                  <option value="suez">Suez</option>
+                  <option value="aswan">Aswan</option>
+                  <option value="mansoura">Mansoura</option>
+                  <option value="tanta">Tanta</option>
+                  <option value="assiut">Assiut</option>
+                  <option value="minya">Minya</option>
+                </select>
+              </div>
+
+              <!-- Neighborhood Dropdown -->
+              <!-- <div class="input-box">
+                <i class="fas fa-location-arrow"></i>
+                <select id="neighborhood" name="neighborhood" required>
+                  <option value="">Select Neighborhood</option>
+                  <option value="nasr-city">Nasr City</option>
+                  <option value="heliopolis">Heliopolis</option>
+                  <option value="dokki">Dokki</option>
+                  <option value="zamalek">Zamalek</option>
+                </select>
+              </div> -->
+
+              <!-- User Type (Donor or Charity) -->
+              <div class="input-box user-type">
+                <label><input type="radio" name="userType" value="donor" required> Donor</label>
+                <label><input type="radio" name="userType" value="charity" required> Charity</label>
+              </div>
+
+              <!-- Preferred Donation Types -->
+              <div class="input-box preferred-types">
+                <div class="tags">
+                  <div class="tags">
+                    <input type="checkbox" id="food" name="preferredTypes" value="FOOD">
+                    <label for="food">Food</label>
+
+                    <input type="checkbox" id="clothes" name="preferredTypes" value="CLOTHES">
+                    <label for="clothes">Clothes</label>
+
+                    <input type="checkbox" id="furniture" name="preferredTypes" value="FURNITURE">
+                    <label for="furniture">Furniture</label>
+
+                    <input type="checkbox" id="school" name="preferredTypes" value="SCHOOL SUPPLIES">
+                    <label for="school">School Supplies</label>
+
+                    <input type="checkbox" id="electronics" name="preferredTypes" value="ELECTRONICS">
+                    <label for="electronics">Electronics</label>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Submit Button -->
+              <div class="button input-box">
+                <input type="submit" id="signupSubmit" value="Submit">
+              </div>
+
+              <div class="text sign-up-text">Already have an account? <label for="flip">Login now</label></div>
+
+            </div>
+          </form>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <script src="js/component-loader.js"></script>
+  <script type="module" src="js/pages/auth.js"></script>
+  <script type="module" src="js/api/authApi.js"></script>
+</body>
+
+</html>
