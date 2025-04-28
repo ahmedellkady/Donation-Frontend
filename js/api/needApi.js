@@ -11,3 +11,11 @@ export async function fetchNeeds(city = "", category = "", urgency = "") {
   const response = await fetch(url);
   return response;
 }
+
+export async function fetchNeedsByCharity(charityId) {
+  const response = await fetch(`${BASE_URL}/api/needs/charity/${charityId}`);
+  if (!response.ok) {
+    throw new Error("Failed to fetch needs.");
+  }
+  return await response.json();
+}

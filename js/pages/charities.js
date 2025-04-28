@@ -18,13 +18,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
       charities.forEach(charity => {
         charityCardsContainer.innerHTML += `
-          <div class="charity-card-media">
+          <div class="charity-card-media" onclick="window.location.href='charity.html?id=${charity.id}'">
             <div class="charity-logo-container">
               <img src="Assets/img/charity.jpg" alt="${charity.name} Logo">
             </div>
             <div class="charity-text-block">
               <h3>${charity.name}</h3>
-              <p>${charity.city}, ${charity.neighborhood}</p>
+              <p>${charity.description}<br>${charity.city}</p>
             </div>
           </div>
         `;
@@ -43,5 +43,5 @@ document.addEventListener("DOMContentLoaded", function () {
     loadCharities(city, category);
   });
 
-  loadCharities(); // Initial load
+  loadCharities();
 });

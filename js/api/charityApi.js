@@ -10,3 +10,11 @@ export async function fetchCharities(city = "", category = "") {
   const response = await fetch(url);
   return response;
 }
+
+export async function fetchCharityById(charityId) {
+  const response = await fetch(`${BASE_URL}/api/charity/${charityId}`);
+  if (!response.ok) {
+    throw new Error("Failed to fetch charity info.");
+  }
+  return await response.json();
+}

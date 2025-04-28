@@ -17,10 +17,18 @@ document.addEventListener("DOMContentLoaded", function () {
       needsContainer.innerHTML = "";
 
       needs.forEach(need => {
+        let iconClass = "fas fa-hand-holding-heart";
+        if (need.type === "FOOD") iconClass = "fas fa-utensils";
+        else if (need.type === "CLOTHES") iconClass = "fas fa-tshirt";
+        else if (need.type === "FURNITURE") iconClass = "fas fa-couch";
+        else if (need.type === "SCHOOL_SUPPLIES") iconClass = "fas fa-pencil-alt";
+        else if (need.type === "ELECTRONICS") iconClass = "fas fa-plug";
+        else if (need.type === "TOYS") iconClass = "fas fa-puzzle-piece";
+
         needsContainer.innerHTML += `
           <div class="need-card">
             <div class="need-header">
-              <i class="fas fa-hand-holding-heart"></i>
+              <i class="${iconClass}"></i>
               <div>
                 <h3>${need.type}</h3>
                 <p>${need.charityName}</p>
@@ -28,7 +36,7 @@ document.addEventListener("DOMContentLoaded", function () {
             </div>
             <div class="location">
               <i class="fas fa-map-marker-alt"></i>
-              <span>${need.charityName} Location</span>
+              <span>${need.city}</span>
             </div>
             <div class="urgency-quantity">
               <span class="badge ${need.urgency.toLowerCase()}">${need.urgency}</span>
@@ -53,5 +61,5 @@ document.addEventListener("DOMContentLoaded", function () {
     loadNeeds(city, category, urgency);
   });
 
-  loadNeeds(); // Initial load
+  loadNeeds();
 });
