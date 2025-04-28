@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Make a Donation</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/donate.css">
+  <link rel="stylesheet" href="css/components/navbar.css">
+  <link rel="stylesheet" href="css/components/footer.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+
+<body>
+
+  <div id="navbar"></div>
+
+  <main class="main-container">
+    <div class="donation-card">
+      <div class="left-section">
+      </div>
+
+      <div class="right-section">
+        <h2>Donate Now</h2>
+        <form id="donationForm">
+          <div class="input-group">
+            <i class="fas fa-hashtag"></i>
+            <input type="number" id="quantity" name="quantity" placeholder="Quantity" required min="1">
+          </div>
+
+          <div class="input-group">
+            <i class="fas fa-box"></i>
+            <input type="text" id="donationItem" name="donationItem" placeholder="Item to Donate" required>
+          </div>
+
+          <div class="input-group">
+            <i class="fas fa-calendar-alt"></i>
+            <input type="date" id="pickupDate" name="pickupDate" placeholder="Pickup Date" required>
+          </div>
+
+          <div class="input-group">
+            <i class="fas fa-clock"></i>
+            <input type="time" id="pickupTime" name="pickupTime" required>
+          </div>
+
+          <div class="button input-group">
+            <input type="submit" value="Submit Donation">
+          </div>
+        </form>
+      </div>
+    </div>
+  </main>
+
+  <div id="footer"></div>
+
+  <script src="js/component-loader.js"></script>
+  <script type="module" src="js/pages/donate.js"></script>
+</body>
+
+</html>
