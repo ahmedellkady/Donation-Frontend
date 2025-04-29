@@ -1,12 +1,26 @@
 import { fetchCharityById } from "../api/charityApi.js";
 import { fetchNeedsByCharity } from "../api/needApi.js";
+import { trackActivity } from "../components/activityTracker.js";
 
 let allNeeds = [];
 let charityId = null;
+let viewAlreadySent = false;
+let ViewTimer;
 
 document.addEventListener("DOMContentLoaded", function () {
     const params = new URLSearchParams(window.location.search);
     charityId = params.get("id");
+
+    localStorage.setItem("lastViewedCharityId", charityId);
+    localStorage.setItem("charityInteraction", "false");
+
+    ViewTimer = setTimeout(async () => {
+        if (!viewAlreadySent) {
+            await trackActivity("VIEW", parseInt(charityId));
+            console.log("Viewed charity:", charityId);
+            viewAlreadySent = true;
+        }
+    }, 60000);
 
     if (!charityId) {
         document.getElementById("needs-container").innerHTML = "<p>No charity ID provided.</p>";
@@ -17,8 +31,15 @@ document.addEventListener("DOMContentLoaded", function () {
     loadNeeds(charityId);
 
     const filterForm = document.querySelector(".filter-form");
-    filterForm.addEventListener("submit", function (event) {
+    filterForm.addEventListener("submit", async function (event) {
         event.preventDefault();
+        if (!viewAlreadySent) {
+            await trackActivity("VIEW", parseInt(charityId));
+            console.log("Viewed charity because of filter:", charityId);
+            viewAlreadySent = true;
+            clearTimeout(ViewTimer);
+        }
+        localStorage.setItem("charityInteraction", "true");
         applyFilters();
     });
 });
@@ -140,7 +161,16 @@ function applyFilters() {
     renderNeeds(filteredNeeds);
 }
 
-window.donateNow = function (charityName, needType, needQuantity, urgency, city, needId, description, charityId) {
+window.donateNow = async function (charityName, needType, needQuantity, urgency, city, needId, description, charityId) {
+    if (!viewAlreadySent) {
+        await trackActivity("VIEW", parseInt(charityId));
+        console.log("Viewed charity because of donation:", charityId);
+        viewAlreadySent = true;
+        clearTimeout(ViewTimer);
+    }
+
+    localStorage.setItem("charityInteraction", "true");
+
     const currentUrl = new URL(window.location.href);
     const basePath = currentUrl.pathname.substring(0, currentUrl.pathname.lastIndexOf("/"));
     const url = new URL(`${basePath}/donate.html`, window.location.origin);
