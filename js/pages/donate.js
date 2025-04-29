@@ -1,4 +1,5 @@
 import { submitDonation } from "../api/donationApi.js";
+import { trackActivity } from "../components/activityTracker.js";
 
 document.addEventListener("DOMContentLoaded", function () {
     const params = new URLSearchParams(window.location.search);
@@ -63,6 +64,7 @@ async function handleSubmitDonation(needType, charityId, city) {
         const response = await submitDonation(donorId, donationPayload);
 
         if (response.ok) {
+            await trackActivity("DONATE", parseInt(charityId));
             alert("Donation submitted successfully!");
             window.location.href = "charities.html";
         } else {

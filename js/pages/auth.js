@@ -1,4 +1,5 @@
 import { registerDonor, registerCharity, loginDonor, loginCharity } from "../api/authApi.js";
+import { startDonorSession } from "../api/sessionApi.js";
 
 document.addEventListener("DOMContentLoaded", function () {
     const signupForm = document.getElementById("signupForm");
@@ -34,7 +35,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
             let responseData = {};
             try {
-                responseData = await response.json(); // try reading json
+                responseData = await response.json();
             } catch (jsonError) {
                 console.error("Failed to parse JSON response:", jsonError);
                 responseData.message = "Server error. Please try again later.";
@@ -90,9 +91,23 @@ document.addEventListener("DOMContentLoaded", function () {
 
             if (response.ok) {
                 localStorage.setItem("user", JSON.stringify(responseData));
-                
+
                 if (userType === "donor") {
-                    window.location.href = "donor-dashboard.html";
+                    const donorId = responseData.id;
+                    try {
+                        const sessionResponse = await startDonorSession(donorId);
+                        if (sessionResponse.ok) {
+                            const sessionId = await sessionResponse.json();
+                            localStorage.setItem("session", JSON.stringify(sessionId));
+                            localStorage.setItem("activityCnt", 0);
+                            window.location.href = "donor-dashboard.html";
+                        } else {
+                            throw new Error("Failed to start donor session.");
+                        }
+                    } catch (sessionError) {
+                        console.error("Session error:", sessionError);
+                        showLoginError("Session creation failed");
+                    }
                 } else if (userType === "charity") {
                     window.location.href = "charity-dashboard.html";
                 }
