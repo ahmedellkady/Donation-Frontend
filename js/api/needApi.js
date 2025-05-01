@@ -19,3 +19,11 @@ export async function fetchNeedsByCharity(charityId) {
   }
   return await response.json();
 }
+
+export async function fetchSuggestedNeedsForDonor(donorId) {
+  const response = await fetch(`${BASE_URL}/api/needs/${donorId}/suggested-needs`);
+  if (!response.ok) {
+    throw new Error("Failed to fetch suggested needs.");
+  }
+  return await response.json();
+}
