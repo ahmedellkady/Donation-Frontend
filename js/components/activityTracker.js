@@ -5,7 +5,7 @@ export async function trackActivity(actionType, charityId) {
   const session = JSON.parse(localStorage.getItem("session"));
   let activityCnt = parseInt(localStorage.getItem("activityCnt")) || 0;
 
-  if (!user || !session || activityCnt > 20) return;
+  if (!user || !session || activityCnt >= 20) return;
 
   console.log("Simulating activity:", {
     donorId: user.id,
@@ -26,10 +26,8 @@ export async function trackActivity(actionType, charityId) {
     const response = await recordDonorActivity(payload);
     console.log("Activity POST response:", response.status);
 
-    if (response.ok) {
-      activityCnt++;
-      localStorage.setItem("activityCnt", activityCnt);
-    }
+    activityCnt++;
+    localStorage.setItem("activityCnt", activityCnt);
   } catch (error) {
     console.error("Failed to record activity:", error);
   }

@@ -1,6 +1,7 @@
-const BASE_URL = "http://localhost:8080";
+import { BASE_URL } from "../utils/config.js";
+import { apiRequest } from "../utils/apiRequest.js";
 
-export async function fetchNeeds(city = "", category = "", urgency = "") {
+export function fetchNeeds(city = "", category = "", urgency = "") {
   let url = `${BASE_URL}/api/needs/filter`;
   const params = [];
   if (city) params.push(`city=${encodeURIComponent(city)}`);
@@ -8,22 +9,13 @@ export async function fetchNeeds(city = "", category = "", urgency = "") {
   if (urgency) params.push(`urgency=${encodeURIComponent(urgency)}`);
   if (params.length) url += `?${params.join('&')}`;
 
-  const response = await fetch(url);
-  return response;
+  return apiRequest(url);
 }
 
-export async function fetchNeedsByCharity(charityId) {
-  const response = await fetch(`${BASE_URL}/api/needs/charity/${charityId}`);
-  if (!response.ok) {
-    throw new Error("Failed to fetch needs.");
-  }
-  return await response.json();
+export function fetchNeedsByCharity(charityId) {
+  return apiRequest(`${BASE_URL}/api/needs/charity/${charityId}`);
 }
 
-export async function fetchSuggestedNeedsForDonor(donorId) {
-  const response = await fetch(`${BASE_URL}/api/needs/${donorId}/suggested-needs`);
-  if (!response.ok) {
-    throw new Error("Failed to fetch suggested needs.");
-  }
-  return await response.json();
+export function fetchSuggestedNeedsForDonor(donorId) {
+  return apiRequest(`${BASE_URL}/api/needs/${donorId}/suggested-needs`);
 }

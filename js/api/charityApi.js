@@ -1,20 +1,16 @@
-const BASE_URL = "http://localhost:8080";
+import { BASE_URL } from "../utils/config.js";
+import { apiRequest } from "../utils/apiRequest.js";
 
-export async function fetchCharities(city = "", category = "") {
+export function fetchCharities(city = "", category = "") {
   let url = `${BASE_URL}/api/charity/filter`;
   const params = [];
   if (city) params.push(`city=${encodeURIComponent(city)}`);
   if (category) params.push(`category=${encodeURIComponent(category)}`);
   if (params.length) url += `?${params.join('&')}`;
 
-  const response = await fetch(url);
-  return response;
+  return apiRequest(url);
 }
 
-export async function fetchCharityById(charityId) {
-  const response = await fetch(`${BASE_URL}/api/charity/${charityId}`);
-  if (!response.ok) {
-    throw new Error("Failed to fetch charity info.");
-  }
-  return await response.json();
+export function fetchCharityById(charityId) {
+  return apiRequest(`${BASE_URL}/api/charity/${charityId}`);
 }

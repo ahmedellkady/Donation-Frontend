@@ -1,7 +1,8 @@
 import { submitDonation } from "../api/donationApi.js";
 import { trackActivity } from "../components/activityTracker.js";
+import { getDonorId } from "../components/userSession.js";
 
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", () => {
     const params = new URLSearchParams(window.location.search);
 
     const charityName = decodeURIComponent(params.get("charityName"));
@@ -11,36 +12,42 @@ document.addEventListener("DOMContentLoaded", function () {
     const city = decodeURIComponent(params.get("city"));
     const description = decodeURIComponent(params.get("description"));
     const charityId = decodeURIComponent(params.get("charityId"));
+    const createdAt = decodeURIComponent(params.get("createdAt"));
+    const needId = decodeURIComponent(params.get("needId"));
 
-    const leftSection = document.querySelector(".left-section");
-    leftSection.innerHTML = `
+    renderLeftSection({ charityName, needType, needQuantity, urgency, city, description, createdAt });
+
+    const quantityInput = document.getElementById("quantity");
+    if (needQuantity) quantityInput.max = parseInt(needQuantity);
+
+    const pickupDateInput = document.getElementById("pickupDate");
+    pickupDateInput.min = new Date().toISOString().split("T")[0];
+
+    document.getElementById("donationForm")?.addEventListener("submit", (e) => {
+        e.preventDefault();
+        handleSubmitDonation({ needType, charityId, city, needId });
+    });
+});
+
+function renderLeftSection({ charityName, needType, needQuantity, urgency, city, description, createdAt }) {
+    const section = document.querySelector(".left-section");
+    section.innerHTML = `
     <h2>${charityName}</h2>
     <p><strong>Category:</strong> ${needType}</p>
     <p><strong>Quantity:</strong> ${needQuantity}</p>
     <p><strong>Urgency:</strong> ${urgency}</p>
     <p><strong>City:</strong> ${city}</p>
+    <p><strong>Created At:</strong> ${createdAt} </p>
     <p class="description">${description}</p>
   `;
+}
 
-    const quantityInput = document.getElementById("quantity");
-    if (needQuantity) {
-        quantityInput.max = parseInt(needQuantity);
-    }
-
-    const donationForm = document.getElementById("donationForm");
-    donationForm.addEventListener("submit", function (event) {
-        event.preventDefault();
-        handleSubmitDonation(needType, charityId, city);
-    });
-});
-
-async function handleSubmitDonation(needType, charityId, city) {
+async function handleSubmitDonation({ needType, charityId, city, needId }) {
     const quantity = document.getElementById("quantity").value;
     const pickupDate = document.getElementById("pickupDate").value;
     const pickupTime = document.getElementById("pickupTime").value;
 
     const donorId = getDonorId();
-
     if (!donorId) {
         alert("Donor not logged in. Please log in first.");
         return;
@@ -54,42 +61,25 @@ async function handleSubmitDonation(needType, charityId, city) {
     const donationPayload = {
         type: needType,
         quantity: parseInt(quantity),
-        pickup: pickup,
-        charityId: parseInt(charityId)
+        pickup,
+        charityId: parseInt(charityId), 
+        needId: parseInt(needId),
+        description: document.getElementById("donationItem").value
     };
 
-    console.log("Sending donation:", donationPayload);
-
     try {
-        const response = await submitDonation(donorId, donationPayload);
+        await submitDonation(donorId, donationPayload);
 
-        if (response.ok) {
-            await trackActivity("DONATE", parseInt(charityId));
-            alert("Donation submitted successfully!");
-            window.location.href = "charities.html";
-        } else {
-            alert("Failed to submit donation.");
-        }
-    } catch (error) {
+        await trackActivity("DONATE", parseInt(charityId));
+        alert("Donation submitted successfully!");
+        window.location.href = "charities.html";
+    } catch (err) {
         alert("An error occurred while submitting your donation.");
+        console.error(err);
     }
 }
 
-
-function getDonorId() {
-    const userJson = localStorage.getItem("user");
-
-    if (!userJson) {
-        return null;
-    }
-
-    const user = JSON.parse(userJson);
-
-    return user.id || null;
-}
-
-function generateFullDateTime(datePart, timePart) {
+export function generateFullDateTime(datePart, timePart) {
     const seconds = "00";
-
     return `${datePart}T${timePart}:${seconds}`;
 }

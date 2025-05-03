@@ -1,188 +1,117 @@
+// js/pages/charity.js (Refactored)
 import { fetchCharityById } from "../api/charityApi.js";
 import { fetchNeedsByCharity } from "../api/needApi.js";
 import { trackActivity } from "../components/activityTracker.js";
+import { renderNeedCard } from "../components/needRenderer.js";
+import { redirectToDonate } from "../utils/navigation.js";
 
 let allNeeds = [];
 let charityId = null;
 let viewAlreadySent = false;
-let ViewTimer;
+let viewTimer;
 
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", () => {
     const params = new URLSearchParams(window.location.search);
     charityId = params.get("id");
-
-    localStorage.setItem("lastViewedCharityId", charityId);
-    localStorage.setItem("charityInteraction", "false");
-
-    ViewTimer = setTimeout(async () => {
-        if (!viewAlreadySent) {
-            await trackActivity("VIEW", parseInt(charityId));
-            console.log("Viewed charity:", charityId);
-            viewAlreadySent = true;
-        }
-    }, 60000);
 
     if (!charityId) {
         document.getElementById("needs-container").innerHTML = "<p>No charity ID provided.</p>";
         return;
     }
 
+    localStorage.setItem("lastViewedCharityId", charityId);
+    localStorage.setItem("charityInteraction", "false");
+
+    viewTimer = setTimeout(async () => {
+        if (!viewAlreadySent) await sendViewActivity();
+        
+    }, 60000);
+
     loadCharity(charityId);
     loadNeeds(charityId);
 
-    const filterForm = document.querySelector(".filter-form");
-    filterForm.addEventListener("submit", async function (event) {
+    document.querySelector(".filter-form")?.addEventListener("submit", async (event) => {
         event.preventDefault();
-        if (!viewAlreadySent) {
-            await trackActivity("VIEW", parseInt(charityId));
-            console.log("Viewed charity because of filter:", charityId);
-            viewAlreadySent = true;
-            clearTimeout(ViewTimer);
-        }
-        localStorage.setItem("charityInteraction", "true");
+        if (!viewAlreadySent) await sendViewActivity();
+        
         applyFilters();
     });
 });
 
-async function loadCharity(charityId) {
+async function sendViewActivity() {
+    await trackActivity("VIEW", parseInt(charityId));
+    viewAlreadySent = true;
+    clearTimeout(viewTimer);
+    localStorage.setItem("charityInteraction", "true");
+}
+
+async function loadCharity(id) {
     try {
-        const charity = await fetchCharityById(charityId);
+        const charity = await fetchCharityById(id);
         document.getElementById("charity-name").innerText = charity.name;
         document.getElementById("charity-description").innerText = charity.description;
-    } catch (error) {
-        console.error("Failed to load charity:", error);
+    } catch (err) {
+        console.error("Failed to load charity:", err);
         document.getElementById("needs-container").innerHTML = "<p>Error loading charity information.</p>";
     }
 }
 
-async function loadNeeds(charityId) {
+async function loadNeeds(id) {
     const container = document.getElementById("needs-container");
     container.innerHTML = "";
 
     try {
-        const needs = await fetchNeedsByCharity(charityId);
-        allNeeds = needs;
+        allNeeds = await fetchNeedsByCharity(id);
 
-        if (needs.length === 0) {
+        if (!allNeeds.length) {
             container.innerHTML = "<p>No needs posted yet.</p>";
             return;
         }
 
-        renderNeeds(needs);
-    } catch (error) {
-        console.error("Failed to load needs:", error);
+        renderNeeds(allNeeds);
+    } catch (err) {
+        console.error("Failed to load needs:", err);
         container.innerHTML = "<p>Error loading needs.</p>";
     }
+}
+
+function applyFilters() {
+    const city = getInputValue("location").toLowerCase();
+    const category = getInputValue("category");
+    const urgency = getInputValue("urgency").toUpperCase();
+
+    let filtered = allNeeds;
+
+    if (city) filtered = filtered.filter(n => n.city?.toLowerCase() === city);
+    if (category) filtered = filtered.filter(n => n.type === category);
+    if (urgency) filtered = filtered.filter(n => n.urgency?.toUpperCase() === urgency);
+
+    renderNeeds(filtered);
 }
 
 function renderNeeds(needs) {
     const container = document.getElementById("needs-container");
     container.innerHTML = "";
 
-    if (needs.length === 0) {
+    if (!needs.length) {
         container.innerHTML = "<p>No needs match your filters.</p>";
         return;
     }
 
-    const charityName = document.getElementById("charity-name").innerText;
+    needs.forEach((need) => {
+        const card = renderNeedCard(need, {
+            showMatch: false,
+            onDonate: (n) => {
+                if (!viewAlreadySent) sendViewActivity();
 
-    needs.forEach(need => {
-        let iconClass = "fas fa-hand-holding-heart";
-        if (need.type === "FOOD") iconClass = "fas fa-utensils";
-        else if (need.type === "CLOTHES") iconClass = "fas fa-tshirt";
-        else if (need.type === "FURNITURE") iconClass = "fas fa-couch";
-        else if (need.type === "SCHOOL_SUPPLIES") iconClass = "fas fa-pencil-alt";
-        else if (need.type === "ELECTRONICS") iconClass = "fas fa-plug";
-        else if (need.type === "TOYS") iconClass = "fas fa-puzzle-piece";
-
-        const card = document.createElement("div");
-        card.className = "need-card";
-
-        card.innerHTML = `
-      <div class="need-header">
-        <i class="${iconClass}"></i>
-        <div>
-          <h3>${need.type}</h3>
-          <p>${charityName}</p>
-        </div>
-      </div>
-      <div class="location">
-        <i class="fas fa-map-marker-alt"></i>
-        <span>${need.city || "Unknown City"}</span>
-      </div>
-      <div class="urgency-quantity">
-        <span class="badge ${need.urgency.toLowerCase()}">${need.urgency}</span>
-        <span class="quantity">Quantity: ${need.quantity}</span>
-      </div>
-      <button 
-        class="donate-btn"
-        onclick="donateNow(
-          '${encodeURIComponent(charityName)}', 
-          '${encodeURIComponent(need.type)}', 
-          '${encodeURIComponent(need.quantity)}', 
-          '${encodeURIComponent(need.urgency)}', 
-          '${encodeURIComponent(need.city)}', 
-          '${encodeURIComponent(need.id)}', 
-          '${encodeURIComponent(need.description)}',
-          '${encodeURIComponent(charityId)}'
-        )"
-      >Donate</button>
-    `;
-
+                const charityName = document.getElementById("charity-name").innerText;
+                redirectToDonate({ ...n, charityId, charityName });
+            }
+        });
         container.appendChild(card);
     });
 }
 
-function applyFilters() {
-    const selectedCity = document.getElementById("location").value.toLowerCase();
-    const selectedCategory = document.getElementById("category").value;
-    const selectedUrgency = document.getElementById("urgency").value.toUpperCase();
-
-    let filteredNeeds = allNeeds;
-
-    if (selectedCity) {
-        filteredNeeds = filteredNeeds.filter(need =>
-            need.city && need.city.toLowerCase() === selectedCity
-        );
-    }
-
-    if (selectedCategory) {
-        filteredNeeds = filteredNeeds.filter(need =>
-            need.type && need.type === selectedCategory
-        );
-    }
-
-    if (selectedUrgency) {
-        filteredNeeds = filteredNeeds.filter(need =>
-            need.urgency && need.urgency.toUpperCase() === selectedUrgency
-        );
-    }
-
-    renderNeeds(filteredNeeds);
+function getInputValue(id) {
+    return document.getElementById(id)?.value.trim() || "";
 }
-
-window.donateNow = async function (charityName, needType, needQuantity, urgency, city, needId, description, charityId) {
-    if (!viewAlreadySent) {
-        await trackActivity("VIEW", parseInt(charityId));
-        console.log("Viewed charity because of donation:", charityId);
-        viewAlreadySent = true;
-        clearTimeout(ViewTimer);
-    }
-
-    localStorage.setItem("charityInteraction", "true");
-
-    const currentUrl = new URL(window.location.href);
-    const basePath = currentUrl.pathname.substring(0, currentUrl.pathname.lastIndexOf("/"));
-    const url = new URL(`${basePath}/donate.html`, window.location.origin);
-
-    url.searchParams.append("charityName", charityName);
-    url.searchParams.append("needType", needType);
-    url.searchParams.append("needQuantity", needQuantity);
-    url.searchParams.append("urgency", urgency);
-    url.searchParams.append("city", city);
-    url.searchParams.append("needId", needId);
-    url.searchParams.append("description", description);
-    url.searchParams.append("charityId", charityId);
-
-    window.location.href = url.toString();
-};
