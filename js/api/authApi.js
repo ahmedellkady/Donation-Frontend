@@ -1,45 +1,38 @@
-const BASE_URL = "http://localhost:8080";
+import { BASE_URL } from "../utils/config.js";
+import { apiRequest } from "../utils/apiRequest.js";
 
-export async function registerDonor(payload) {
-  const response = await fetch(`${BASE_URL}/api/donors/register`, {
+export function registerCharity(payload) {
+  return apiRequest(`${BASE_URL}/api/charity/register`, {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload)
   });
-  return response;
 }
 
-export async function registerCharity(payload) {
-  const response = await fetch(`${BASE_URL}/api/charity/register`, {
+export function registerDonor(payload) {
+  return apiRequest(`${BASE_URL}/api/donors/register`, {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload)
   });
-  return response;
 }
 
 export async function loginDonor(payload) {
-  const response = await fetch(`${BASE_URL}/api/donors/login`, {
+  return apiRequest(`${BASE_URL}/api/donors/login`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json"
     },
     body: JSON.stringify(payload)
   });
-  return response;
 }
 
 export async function loginCharity(payload) {
-  const response = await fetch(`${BASE_URL}/api/charity/login`, {
+  return apiRequest(`${BASE_URL}/api/charity/login`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json"
     },
     body: JSON.stringify(payload)
   });
-  return response;
 }
