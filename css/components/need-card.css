@@ -94,14 +94,17 @@
 
 .badge.critical {
   background-color: #d9534f; /* red */
+  color: #721c24;
 }
 
 .badge.medium {
   background-color: #f0ad4e; /* yellow */
+  color: #8a6d3b;
 }
 
 .badge.low {
   background-color: #5cb85c; /* green */
+  color: #3c763d;
 }
 
 .quantity {

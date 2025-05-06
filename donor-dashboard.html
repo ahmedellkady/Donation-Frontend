@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Donor Dashboard</title>
+    <link rel="stylesheet" href="css/styles.css" />
+    <link rel="stylesheet" href="css/dashboard.css" />
+    <link rel="stylesheet" href="css/components/navbar.css" />
+    <link rel="stylesheet" href="css/components/footer.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+
+<body>
+    <div id="navbar"></div>
+
+    <main class="container">
+        <section class="welcome">
+            <h1></h1>
+            <p>Here’s your recent activity and quick actions.</p>
+
+            <div class="summary-boxes">
+                <div class="summary-box summary-combined">
+                    <div class="combined-left vertical-box">
+                        <p class="summary-number"></p>
+                        <p class="summary-label">Donations Made</p>
+                        <div>
+                            <i class="fas fa-box box-icon size"></i>
+                            <i class="fas fa-box-open box-icon size"></i>
+                        </div>
+
+                    </div>
+
+                    <div class="combined-divider"></div>
+
+                    <div class="combined-right vertical-box">
+                        <i class="fas fa-calendar-alt box-icon"></i>
+                        <p class="summary-label">Upcoming Pickup</p>
+                        <p class="summary-date"></p>
+                    </div>
+                </div>
+
+
+                <div class="summary-box">
+                    <p class="summary-number">1</p>
+                    <p class="summary-label">Pending Feedback</p>
+                </div>
+
+                <div class="summary-box">
+                    <a href="charities.html" style="text-decoration: none;">
+                        <button class="donate-button"><i class="fas fa-plus"></i></button>
+                    </a>
+                    <p class="summary-label">Make a Donation</p>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <h2>My Donations</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Donation Type</th>
+                        <th>Quantity</th>
+                        <th>Status</th>
+                        <th>Date</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="donations-table-body">
+                    
+                </tbody>
+            </table>
+        </section>
+
+        <section>
+            <h2>Matching Needs</h2>
+            <table id="suggested-needs-table">
+                <thead>
+                    <tr>
+                        <th>Donation Type</th>
+                        <th>Quantity</th>
+                        <th>Urgency</th>
+                        <th>Charity</th>
+                        <th>Location</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    
+                </tbody>
+            </table>
+        </section>
+
+        <h2>Profile Settings</h2>
+        <section class="profile-settings">
+            <button>Edit Profile Info</button>
+            <button>Change Password</button>
+            <button class="danger">Delete Account</button>
+        </section>
+
+        <section>
+            <h2>Your Feedback</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Rating</th>
+                        <th>Comment</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>—</td>
+                        <td>—</td>
+                        <td><a href="#">Feedback</a></td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+        <div class="modal-overlay" id="cancelModal">
+            <div class="modal-box">
+                <h2>Cancel Donation</h2>
+                <p>Are you sure you want to cancel this donation?</p>
+
+                <div class="modal-info">
+                    <p><strong>Donation Type:</strong> <span id="modalDonationType"></span></p>
+                    <p><strong>Pickup Date:</strong> <span id="modalPickupDate"></span></p>
+                </div>
+
+                <div class="modal-actions">
+                    <button class="btn-outline" onclick="closeModal()">No</button>
+                    <button class="btn-danger" onclick="confirmCancel()">Yes</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div id="footer"></div>
+    <script src="js/component-loader.js"></script>
+    <script type="module" src="js/pages/donor-dashboard.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Feedback</title>
+    <link rel="stylesheet" href="css/feedback.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+
+<body>
+    <main class="feedback-container">
+        <h1>Feedback</h1>
+        <p class="subtitle">How would you rate the donation experience?</p>
+
+        <div class="stars">
+            <i class="far fa-star" data-value="1"></i>
+            <i class="far fa-star" data-value="2"></i>
+            <i class="far fa-star" data-value="3"></i>
+            <i class="far fa-star" data-value="4"></i>
+            <i class="far fa-star" data-value="5"></i>
+        </div>
+
+        <label for="comment" class="label">Comment</label>
+        <textarea id="comment" rows="4" placeholder="Write your feedback..."></textarea>
+
+        <button class="submit-btn">Submit Feedback</button>
+    </main>
+
+    <script type="module" src="js/pages/feedback.js"></script>
+</body>
+
+</html>

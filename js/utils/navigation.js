@@ -12,3 +12,8 @@ export function redirectToDonate(need) {
 
     window.location.href = url.toString();
 }
+
+export function redirectToDonationDetails(donation) {
+    localStorage.setItem("selectedDonation", JSON.stringify(donation));
+    window.location.href = "donation-details.html";
+}
