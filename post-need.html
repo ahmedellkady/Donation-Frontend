@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Post a New Need</title>
+  <link rel="stylesheet" href="css/feedback.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+
+<body>
+  <main class="feedback-container">
+    <h1>Post a New Need</h1>
+    <p class="subtitle">Provide the details of the need you want to post.</p>
+
+    <form id="postNeedForm">
+      <label for="needType" class="label">Type</label>
+      <select id="needType" required class="input-field">
+        <option value="">Select Type</option>
+        <option value="FOOD">Food</option>
+        <option value="CLOTHES">Clothes</option>
+        <option value="FURNITURE">Furniture</option>
+        <option value="ELECTRONICS">Electronics</option>
+        <option value="TOYS">Toys</option>
+        <option value="SCHOOL_SUPPLIES">School Supplies</option>
+      </select>
+
+      <label for="quantity" class="label">Quantity</label>
+      <input type="number" id="quantity" min="1" required class="input-field" />
+
+      <label for="urgency" class="label">Urgency</label>
+      <select id="urgency" required class="input-field">
+        <option value="LOW">Low</option>
+        <option value="MEDIUM">Medium</option>
+        <option value="HIGH">High</option>
+        <option value="CRITICAL">Critical</option>
+      </select>
+
+      <label for="description" class="label">Description</label>
+      <textarea id="description" rows="4" placeholder="Describe the need..." required></textarea>
+
+      <button type="submit" class="submit-btn">Submit Need</button>
+    </form>
+  </main>
+
+  <script type="module" src="js/pages/post-need.js"></script>
+</body>
+
+</html>

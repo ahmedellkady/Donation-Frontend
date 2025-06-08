@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>All Donations</title>
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="css/dashboard.css" />
+</head>
+<body>
+  <main class="container">
+    <section class="welcome">
+      <h1>Incoming Donations</h1>
+      <p>Track all donations submitted to your posted needs.</p>
+    </section>
+
+    <section>
+      <table>
+        <thead>
+          <tr>
+            <th>Donor</th>
+            <th>Type</th>
+            <th>Quantity</th>
+            <th>Status</th>
+            <th>Pickup Date</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="donations-table-body">
+          <!-- Loaded dynamically -->
+        </tbody>
+      </table>
+    </section>
+  </main>
+
+  <script type="module" src="js/pages/all-donations.js"></script>
+</body>
+</html>

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>All Needs</title>
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="css/dashboard.css" />
+</head>
+<body>
+  <main class="container">
+    <section class="welcome">
+      <h1>All Needs</h1>
+      <p>Manage all your posted needs in one place.</p>
+    </section>
+
+    <section>
+      <table>
+        <thead>
+          <tr>
+            <th>Type</th>
+            <th>Quantity</th>
+            <th>Urgency</th>
+            <th>City</th>
+            <th>Created</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="needs-table-body">
+          <!-- Loaded dynamically -->
+        </tbody>
+      </table>
+    </section>
+  </main>
+
+  <script type="module" src="js/pages/all-needs.js"></script>
+</body>
+</html>
