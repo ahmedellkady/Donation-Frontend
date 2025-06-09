@@ -19,3 +19,25 @@ export function fetchNeedsByCharity(charityId) {
 export function fetchSuggestedNeedsForDonor(donorId) {
   return apiRequest(`${BASE_URL}/api/needs/${donorId}/suggested-needs`);
 }
+
+export function fetchActiveNeeds(charityId) {
+  return apiRequest(`${BASE_URL}/api/needs/charity/${charityId}/active`);
+}
+
+export function countActiveNeeds(charityId) {
+  return apiRequest(`${BASE_URL}/api/needs/charity/${charityId}/active/count`);
+}
+
+export function deleteNeedById(needId) {
+  return apiRequest(`${BASE_URL}/api/needs/delete/${needId}`, {
+    method: "DELETE"
+  });
+}
+
+export function postNeed(charityId, needData) {
+  return apiRequest(`${BASE_URL}/api/needs/post/${charityId}`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(needData)
+  });
+}

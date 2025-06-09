@@ -38,3 +38,33 @@ export function submitFeedback(feedbackData) {
     body: JSON.stringify(feedbackData)
   });
 }
+
+export function fetchIncomingDonations(charityId) {
+  return apiRequest(`${BASE_URL}/api/donations/charity/${charityId}/incoming`);
+}
+
+export function countIncomingDonations(charityId) {
+  return apiRequest(`${BASE_URL}/api/donations/charity/${charityId}/incoming/count`);
+}
+
+export function pickupScheduled(donationId) {
+  return apiRequest(`${BASE_URL}/api/donations/scheduled-pickup/${donationId}` , {
+    method: 'PUT'
+  });
+}
+
+export function pickupPickedUp(donationId) {
+  return apiRequest(`${BASE_URL}/api/donations/picked-up-pickup/${donationId}` , {
+    method: 'PUT'
+  });
+}
+
+export function pickupDelivered(donationId) {
+  return apiRequest(`${BASE_URL}/api/donations/delivered-pickup/${donationId}` , {
+    method: 'PUT'
+  });
+}
+
+export function getDonationsForCharity(charityId) {
+  return apiRequest(`${BASE_URL}/api/donations/charity/${charityId}`);
+}
