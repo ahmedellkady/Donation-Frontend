@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Charity Dashboard</title>
+    <link rel="stylesheet" href="css/styles.css" />
+    <link rel="stylesheet" href="css/dashboard.css" />
+    <link rel="stylesheet" href="css/components/navbar.css" />
+    <link rel="stylesheet" href="css/components/footer.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+
+<body>
+    <div id="navbar"></div>
+
+    <main class="container">
+        <section class="welcome">
+            <h1 id="charity-name">Welcome, </h1>
+            <p>Here’s a quick summary of your needs and donations.</p>
+
+            <div class="summary-boxes">
+                <div class="summary-box summary-combined">
+                    <div class="combined-left vertical-box">
+                        <p class="summary-number">5</p>
+                        <p class="summary-label">Active Needs</p>
+                        <i class="fas fa-hand-holding-heart box-icon size"></i>
+                    </div>
+
+                    <div class="combined-divider"></div>
+
+                    <div class="combined-right vertical-box">
+                        <i class="fas fa-box box-icon"></i>
+                        <p class="summary-label">Upcoming Donations</p>
+                        <p class="summary-date">2 scheduled</p>
+                    </div>
+                </div>
+
+                <div class="summary-box">
+                    <p class="summary-number">3</p>
+                    <p class="summary-label">Feedback Received</p>
+                </div>
+
+                <div class="summary-box">
+                    <a href="post-need.html" style="text-decoration: none;">
+                        <button class="donate-button"><i class="fas fa-plus"></i></button>
+                    </a>
+                    <p class="summary-label">Post New Need</p>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <h2>Active Needs</h2>
+                <a href="all-needs.html" class="view-all-btn">View All</a>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Type</th>
+                        <th>Quantity</th>
+                        <th>Urgency</th>
+                        <th>City</th>
+                        <th>Created</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="needs-table-body">
+                    <!-- Populated dynamically -->
+                </tbody>
+            </table>
+        </section>
+
+        <section>
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <h2>Incoming Donations</h2>
+                <a href="all-donations.html" class="view-all-btn">View All</a>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Donor</th>
+                        <th>Type</th>
+                        <th>Quantity</th>
+                        <th>Status</th>
+                        <th>Pickup Date</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="donations-table-body">
+                    <!-- Populated dynamically -->
+                </tbody>
+            </table>
+        </section>
+
+        <section style="margin-top: 40px;">
+            <h2>Your Feedback</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Rating</th>
+                        <th>Comment</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="feedback-table-body">
+                    <tr>
+                        <td>—</td>
+                        <td>—</td>
+                        <td><a href="feedback.html">Respond</a></td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section>
+            <h2>Profile Settings</h2>
+            <div class="profile-settings">
+                <button>Edit Charity Info</button>
+                <button>Change Password</button>
+                <button class="danger">Delete Account</button>
+            </div>
+        </section>
+
+    </main>
+
+    <div id="footer"></div>
+
+    <script src="js/component-loader.js"></script>
+    <script type="module" src="js/pages/charity-dashboard.js"></script>
+</body>
+
+</html>

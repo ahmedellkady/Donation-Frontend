@@ -72,3 +72,14 @@ textarea {
 .submit-btn:hover {
     background-color: #295c39;
 }
+
+.input-field {
+  width: 100%;
+  padding: 12px;
+  font-size: 1rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  font-family: 'Poppins', sans-serif;
+  box-sizing: border-box;
+}
