@@ -2,6 +2,7 @@ import { getDonationCount, getUpcomingPickup, getDonationHistory, cancelDonation
 import { getDonorId, getDonorName } from "../components/userSession.js";
 import { fetchSuggestedNeedsForDonor } from "../api/needApi.js";
 import { redirectToDonationDetails, redirectToDonate } from "../utils/navigation.js";
+import { fetchDonorFeedbacks } from "../api/feedbackApi.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
     const donorId = getDonorId();
@@ -35,6 +36,15 @@ document.addEventListener("DOMContentLoaded", async () => {
         renderSuggestedNeedsTable(needs);
     } catch (e) {
         console.error("Failed to fetch needs:", e.message);
+    }
+
+    try {
+        const donorFeedbacks = await fetchDonorFeedbacks(donorId);
+        renderDonorFeedbacks(donorFeedbacks);
+    } catch (err) {
+        console.error("Failed to load donor feedbacks:", err.message);
+        document.getElementById("donor-feedbacks-table-body").innerHTML =
+            "<tr><td colspan='3'>Error loading feedbacks.</td></tr>";
     }
 });
 
@@ -153,6 +163,42 @@ window.confirmCancel = async function () {
         closeModal();
     }
 };
+
+function renderDonorFeedbacks(feedbacks) {
+    const tbody = document.getElementById("donor-feedbacks-table-body");
+    tbody.innerHTML = "";
+
+    if (!feedbacks.length) {
+        tbody.innerHTML = "<tr><td colspan='3'>No feedback received yet.</td></tr>";
+        return;
+    }
+
+    feedbacks.forEach(fb => {
+        const row = document.createElement("tr");
+
+        const stars = Array.from({ length: 5 }, (_, i) => {
+            return `<i class="${i < fb.rating ? "fas" : "far"} fa-star" style="color:#ffcc00;"></i>`;
+        }).join("");
+
+        row.innerHTML = `
+            <td>#${fb.donationId}</td>
+            <td>${stars}</td>
+            <td>${fb.comment || "—"}</td>
+            <td><a href="#" class="view-feedback" data-id="${fb.donationId}">View Details</a></td>
+        `;
+
+        tbody.appendChild(row);
+    });
+
+    document.querySelectorAll(".view-feedback").forEach(link => {
+        link.addEventListener("click", e => {
+            e.preventDefault();
+            const donationId = e.target.getAttribute("data-id");
+            localStorage.setItem("donationId", donationId);
+            window.location.href = "donation-details.html";
+        });
+    });
+}
 
 function getUrgencyClass(urgency) {
     switch (urgency.toLowerCase()) {

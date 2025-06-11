@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Donation Details & Feedback</title>
+    <link rel="stylesheet" href="css/feedback.css" />
+    <link rel="stylesheet" href="css/donation-details.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+
+<body>
+    <main class="donation-details-container">
+        <h1>Donation Details</h1>
+
+        <div class="section box">
+            <p><strong>Type</strong></p>
+            <span class="type-badge">Loading...</span>
+            <hr />
+            <p><strong>Status</strong></p>
+            <p class="status">Loading...</p>
+            <hr />
+            <p><strong>Description</strong></p>
+            <p class="description">Loading...</p>
+            <hr />
+            <p><strong>Quantity</strong></p>
+            <p class="quantity">Loading...</p>
+        </div>
+
+        <div class="section box">
+            <h2>Pickup Information</h2>
+            <p id="pickup-time">Scheduled Time: Loading...</p>
+            <p id="pickup-location">Address: Loading...</p>
+        </div>
+
+        <div class="section box charity">
+            <h2>Donor</h2>
+            <div class="charity-info">
+                <div>
+                    <p><strong id="donor-name">Loading...</strong></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="section box" id="feedback-section">
+            <h2>Donor Feedback</h2>
+            <div class="stars" id="feedback-stars"></div>
+            <p id="feedback-comment">Loading feedback...</p>
+        </div>
+
+        <div class="section box" id="charity-feedback-section">
+            <h2>Give Feedback to Donor</h2>
+            <div class="stars" id="charity-stars">
+                <i class="far fa-star" data-value="1"></i>
+                <i class="far fa-star" data-value="2"></i>
+                <i class="far fa-star" data-value="3"></i>
+                <i class="far fa-star" data-value="4"></i>
+                <i class="far fa-star" data-value="5"></i>
+            </div>
+            <textarea id="charity-comment" rows="4" placeholder="Write your feedback..."></textarea>
+            <button id="submit-charity-feedback" class="submit-btn">Submit Feedback</button>
+        </div>
+
+
+        <div class="back-link">
+            <a href="charity-dashboard.html">&larr; Back to Dashboard</a>
+        </div>
+    </main>
+
+    <script type="module" src="js/pages/donation-details-feedback.js"></script>
+</body>
+
+</html>

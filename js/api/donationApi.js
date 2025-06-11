@@ -29,16 +29,6 @@ export function cancelDonation(donationId) {
   });
 }
 
-export function submitFeedback(feedbackData) {
-  return apiRequest(`${BASE_URL}/api/feedback/submit`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify(feedbackData)
-  });
-}
-
 export function fetchIncomingDonations(charityId) {
   return apiRequest(`${BASE_URL}/api/donations/charity/${charityId}/incoming`);
 }
@@ -67,4 +57,8 @@ export function pickupDelivered(donationId) {
 
 export function getDonationsForCharity(charityId) {
   return apiRequest(`${BASE_URL}/api/donations/charity/${charityId}`);
+}
+
+export function getDonationDetails(donationId) {
+  return apiRequest(`${BASE_URL}/api/donations/details/${donationId}`);
 }
