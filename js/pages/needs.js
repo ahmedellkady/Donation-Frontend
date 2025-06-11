@@ -1,5 +1,6 @@
 import { fetchNeeds } from "../api/needApi.js";
 import { renderNeedCard } from "../components/needRenderer.js";
+import { redirectToDonate } from "../utils/navigation.js";
 
 document.addEventListener("DOMContentLoaded", () => {
   const container = document.querySelector(".needs-container");
@@ -29,7 +30,7 @@ async function loadNeeds(city = "", category = "", urgency = "") {
     }
 
     needs.forEach((need) => {
-      const card = renderNeedCard(need, { showMatch: false });
+      const card = renderNeedCard(need, { showMatch: false, onDonate: redirectToDonate });
       container.appendChild(card);
     });
   } catch (error) {

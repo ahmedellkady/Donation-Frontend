@@ -18,3 +18,7 @@ export function fetchCharityById(charityId) {
 export function fetchCharityFeedbacks(charityId) {
   return apiRequest(`${BASE_URL}/api/feedback/charity/${charityId}/feedbacks`);
 }
+
+export function fetchRecommendedCharitiesForDonor(donorId) {
+  return apiRequest(`${BASE_URL}/api/charity/recommendations/${donorId}`);
+}
