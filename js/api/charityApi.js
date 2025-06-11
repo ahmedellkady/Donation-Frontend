@@ -14,3 +14,7 @@ export function fetchCharities(city = "", category = "") {
 export function fetchCharityById(charityId) {
   return apiRequest(`${BASE_URL}/api/charity/${charityId}`);
 }
+
+export function fetchCharityFeedbacks(charityId) {
+  return apiRequest(`${BASE_URL}/api/feedback/charity/${charityId}/feedbacks`);
+}

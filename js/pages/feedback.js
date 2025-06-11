@@ -1,4 +1,4 @@
-import { submitFeedback } from "../api/donationApi.js";
+import { submitFeedback } from "../api/feedbackApi.js";
 
 const params = new URLSearchParams(window.location.search);
 const donationId = parseInt(params.get("id"));

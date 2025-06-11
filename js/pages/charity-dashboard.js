@@ -1,5 +1,6 @@
 import { fetchActiveNeeds, countActiveNeeds, deleteNeedById } from "../api/needApi.js";
 import { fetchIncomingDonations, countIncomingDonations, pickupScheduled, pickupPickedUp, pickupDelivered } from "../api/donationApi.js";
+import { fetchCharityFeedbacks } from "../api/charityApi.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
     const user = JSON.parse(localStorage.getItem("user"));
@@ -11,6 +12,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     await populateActiveCount(charityId);
     await populateIncomingDonations(charityId);
     await populateDonationCount(charityId);
+    await populateCharityFeedbacks(charityId);
     document.getElementById("charity-name").textContent = `Welcome, ${charityName}`;
 });
 
@@ -148,6 +150,47 @@ async function populateDonationCount(charityId) {
         if (dateSpan) dateSpan.textContent = `${count} scheduled`;
     } catch (err) {
         console.error("Error fetching incoming donation count:", err);
+    }
+}
+
+async function populateCharityFeedbacks(charityId) {
+    try {
+        const feedbacks = await fetchCharityFeedbacks(charityId);
+        const tbody = document.getElementById("feedback-table-body");
+        tbody.innerHTML = "";
+
+        if (!feedbacks.length) {
+            tbody.innerHTML = `<tr><td colspan="3">No feedback yet.</td></tr>`;
+            return;
+        }
+
+        feedbacks.forEach(fb => {
+            const row = document.createElement("tr");
+
+            const viewLink = document.createElement("a");
+            viewLink.href = "#";
+            viewLink.textContent = "View";
+            viewLink.addEventListener("click", () => {
+                localStorage.setItem("donationId", fb.donationId);
+                window.location.href = "donation-details-feedback.html";
+            });
+
+            row.innerHTML = `
+                <td>${fb.rating ?? "—"}</td>
+                <td>${fb.comment ?? "—"}</td>
+            `;
+
+            const actionCell = document.createElement("td");
+            actionCell.appendChild(viewLink);
+            row.appendChild(actionCell);
+
+            tbody.appendChild(row);
+        });
+
+    } catch (err) {
+        console.error("Error loading feedbacks:", err);
+        document.getElementById("feedback-table-body").innerHTML =
+            "<tr><td colspan='3'>Error loading feedback.</td></tr>";
     }
 }
 

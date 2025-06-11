@@ -43,7 +43,10 @@ function renderDonationsTable(donations) {
     const viewLink = document.createElement("a");
     viewLink.href = "#";
     viewLink.textContent = "Details";
-    viewLink.addEventListener("click", () => redirectToDonationDetails(donation));
+    viewLink.addEventListener("click", () => {
+      localStorage.setItem("selectedDonation", JSON.stringify(donation));
+      window.location.href = "donation-details-feedback.html";
+    });
     actionCell.appendChild(viewLink);
 
     row.appendChild(actionCell);
@@ -52,12 +55,12 @@ function renderDonationsTable(donations) {
 }
 
 function getStatusClass(status) {
-    switch (status.toLowerCase()) {
-        case "pending": return "pending";
-        case "picked_up": return "picked-up";
-        case "delivered": return "delivered";
-        case "canceled": return "canceled";
-        case "scheduled": return "scheduled";
-        default: return "pending";
-    }
+  switch (status.toLowerCase()) {
+    case "pending": return "pending";
+    case "picked_up": return "picked-up";
+    case "delivered": return "delivered";
+    case "canceled": return "canceled";
+    case "scheduled": return "scheduled";
+    default: return "pending";
+  }
 }
