@@ -18,8 +18,8 @@ export function fetchNeedsByCharity(charityId) {
   return apiRequest(`${BASE_URL}/api/needs/charity/${charityId}`);
 }
 
-export function fetchSuggestedNeedsForDonor(donorId) {
-  return apiRequest(`${BASE_URL}/api/needs/${donorId}/suggested-needs`);
+export function fetchSuggestedNeedsForDonor(donorId, page = 0, size = 10) {
+  return apiRequest(`${BASE_URL}/api/needs/${donorId}/suggested-needs?page=${page}&size=${size}`);
 }
 
 export function fetchActiveNeeds(charityId) {

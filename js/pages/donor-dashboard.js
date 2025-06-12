@@ -34,7 +34,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     try {
         const needs = await fetchSuggestedNeedsForDonor(donorId);
-        renderSuggestedNeedsTable(needs);
+        renderSuggestedNeedsTable(needs.content);
     } catch (e) {
         console.error("Failed to fetch needs:", e.message);
     }
@@ -120,6 +120,8 @@ function renderSuggestedNeedsTable(needs, tableSelector = "#suggested-needs-tabl
         return;
     }
 
+    needs = needs.slice(0, 5);
+
     needs.forEach(need => {
         const row = document.createElement("tr");
 
@@ -129,6 +131,7 @@ function renderSuggestedNeedsTable(needs, tableSelector = "#suggested-needs-tabl
           <td class="status-cell"><span class="status ${getUrgencyClass(need.urgency)}">${need.urgency}</span></td>
           <td>${need.charityName}</td>
           <td>${need.city}</td>
+          <td>${need.predictedScore}</td>
         `;
 
         const actionCell = document.createElement("td");

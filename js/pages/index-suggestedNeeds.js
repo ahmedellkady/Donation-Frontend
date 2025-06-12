@@ -20,7 +20,8 @@ window.addEventListener("DOMContentLoaded", async () => {
 
             if (donorId) {
                 try {
-                    needs = await fetchSuggestedNeedsForDonor(donorId);
+                    const result = await fetchSuggestedNeedsForDonor(donorId);
+                    needs = result.content?.slice(0, 7) || [];
                     showMatch = true;
                 } catch (err) {
                     console.warn("AI model failed. Falling back to public needs.");
@@ -29,13 +30,11 @@ window.addEventListener("DOMContentLoaded", async () => {
         }
 
         if (!needs || !needs.length) {
-            const publicNeeds = await fetchNeeds();
-            needs = publicNeeds.slice(0, 7);
+            const publicNeedsResult = await fetchNeeds();
+            needs = publicNeedsResult.content?.slice(0, 7) || [];
             showMatch = false;
-        } else {
-            needs = needs.slice(0, 7);
         }
-        
+
         if (!needs.length) {
             container.innerHTML = "<p>No suggested or public needs available.</p>";
             return;
