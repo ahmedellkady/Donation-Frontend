@@ -1,4 +1,4 @@
-import { fetchRecommendedCharitiesForDonor } from "../api/charityApi.js";
+import { fetchCharities, fetchRecommendedCharitiesForDonor } from "../api/charityApi.js";
 import { renderCharityCard } from "../components/charityRenderer.js";
 
 window.addEventListener("DOMContentLoaded", async () => {
@@ -18,7 +18,10 @@ window.addEventListener("DOMContentLoaded", async () => {
             if (donorId) {
                 try {
                     charities = await fetchRecommendedCharitiesForDonor(donorId);
-                    charities = charities.slice(0, 7);
+                    const currentPage = window.location.pathname.split("/").pop();
+                    if (currentPage === "index.html") {
+                        charities = charities.slice(0, 7);
+                    }
                 } catch (err) {
                     console.warn("AI charity model failed. Falling back to static charities.");
                 }
@@ -26,8 +29,10 @@ window.addEventListener("DOMContentLoaded", async () => {
         }
 
         if (!charities.length) {
-            container.innerHTML = "<p>No recommended charities available.</p>";
-            return;
+            charities = await fetchCharities();
+            charities = charities.slice(0, 7);
+            // container.innerHTML = "<p>No recommended charities available.</p>";
+            // return;
         }
 
         charities.forEach(charity => {

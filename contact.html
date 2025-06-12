@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Contact Us</title>
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="css/components/navbar.css" />
+  <link rel="stylesheet" href="css/components/footer.css" />
+</head>
+<body>
+  <div id="navbar"></div>
+
+  <section class="container section contact-section">
+    <h1>Contact Us</h1>
+    <p>If you have questions, suggestions, or need support, feel free to reach out:</p>
+
+    <div class="contact-info">
+      <p><strong>Email:</strong> support@donateconnect.org</p>
+      <p><strong>Phone:</strong> +20 100 123 4567</p>
+      <p><strong>Address:</strong> 15th Floor, Green Tower, New Cairo, Egypt</p>
+    </div>
+
+    <form class="contact-form">
+      <label for="name">Your Name</label>
+      <input type="text" id="name" placeholder="Enter your name" required>
+
+      <label for="email">Your Email</label>
+      <input type="email" id="email" placeholder="Enter your email" required>
+
+      <label for="message">Your Message</label>
+      <textarea id="message" rows="5" placeholder="Type your message..." required></textarea>
+
+      <button type="submit">Send Message</button>
+    </form>
+  </section>
+
+  <div id="footer"></div>
+  <script defer src="js/component-loader.js"></script>
+</body>
+</html>

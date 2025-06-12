@@ -63,8 +63,10 @@ async function handleLogin(event) {
             const session = await startDonorSession(user.id);
             localStorage.setItem("session", JSON.stringify(session));
             localStorage.setItem("activityCnt", 0);
+            localStorage.setItem("userType", "donor");
             window.location.href = "donor-dashboard.html";
         } else {
+            localStorage.setItem("userType", "charity");
             window.location.href = "charity-dashboard.html";
         }
     } catch (err) {
