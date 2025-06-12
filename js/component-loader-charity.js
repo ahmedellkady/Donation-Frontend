@@ -9,14 +9,12 @@ function loadComponent(selector, file, callback) {
     });
 }
 
-function setupNavbar() {
+function setupCharityNavbar() {
   const hamburger = document.getElementById("hamburger");
   const navLinks = document.getElementById("nav-links");
-  const dashboardLink = document.getElementById("dashboard-link");
-  const loginIcon = document.getElementById("login-icon");
   const logoutLink = document.getElementById("logout-link");
 
-  // Toggle menu
+  // Toggle dropdown menu
   hamburger.addEventListener("click", (e) => {
     e.stopPropagation();
     navLinks.classList.toggle("active");
@@ -34,21 +32,6 @@ function setupNavbar() {
     });
   });
 
-  // Show/hide login/logout/dashboard
-  const user = JSON.parse(localStorage.getItem("user"));
-  const userType = localStorage.getItem("userType");
-
-  if (user && userType === "donor") {
-    dashboardLink.style.display = "inline-block";
-    loginIcon.style.display = "none";
-    logoutLink.style.display = "inline-block";
-    dashboardLink.href = "donor-dashboard.html";
-  } else {
-    dashboardLink.style.display = "none";
-    loginIcon.style.display = "inline-block";
-    logoutLink.style.display = "none";
-  }
-
   logoutLink?.addEventListener("click", (e) => {
     e.preventDefault();
     localStorage.clear();
@@ -58,6 +41,6 @@ function setupNavbar() {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-  loadComponent("#navbar", "components/navbar.html", setupNavbar);
+  loadComponent("#navbar", "components/navbar-charity.html", setupCharityNavbar);
   loadComponent("#footer", "components/footer.html");
 });

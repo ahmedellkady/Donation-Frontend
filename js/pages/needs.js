@@ -2,37 +2,45 @@ import { fetchNeeds } from "../api/needApi.js";
 import { renderNeedCard } from "../components/needRenderer.js";
 import { redirectToDonate } from "../utils/navigation.js";
 
+let currentPage = 0;
+const pageSize = 10;
+
 document.addEventListener("DOMContentLoaded", () => {
-  const container = document.querySelector(".needs-container");
   const form = document.querySelector(".filter-form");
 
   form?.addEventListener("submit", async (event) => {
     event.preventDefault();
-    const city = getInputValue("location");
-    const category = getInputValue("category");
-    const urgency = getInputValue("urgency");
-    await loadNeeds(city, category, urgency);
+    currentPage = 0;
+    await loadNeeds(currentPage);
   });
 
-  loadNeeds();
+  loadNeeds(currentPage);
 });
 
-async function loadNeeds(city = "", category = "", urgency = "") {
+async function loadNeeds(page = 0) {
   const container = document.querySelector(".needs-container");
+  const paginationContainer = document.getElementById("pagination");
   container.innerHTML = "";
+  paginationContainer.innerHTML = "";
+
+  const city = getInputValue("location");
+  const category = getInputValue("category");
+  const urgency = getInputValue("urgency");
 
   try {
-    const needs = await fetchNeeds(city, category, urgency);
+    const result = await fetchNeeds(city, category, urgency, page, pageSize);
 
-    if (!needs.length) {
+    if (!result.content?.length) {
       container.innerHTML = "<p>No needs found.</p>";
       return;
     }
 
-    needs.forEach((need) => {
+    result.content.forEach((need) => {
       const card = renderNeedCard(need, { showMatch: false, onDonate: redirectToDonate });
       container.appendChild(card);
     });
+
+    renderPagination(result.totalPages, result.number);
   } catch (error) {
     console.error("Error loading needs:", error);
     container.innerHTML = "<p>Failed to load needs. Please try again later.</p>";
@@ -41,4 +49,20 @@ async function loadNeeds(city = "", category = "", urgency = "") {
 
 function getInputValue(id) {
   return document.getElementById(id)?.value.trim() || "";
+}
+
+function renderPagination(totalPages, currentPage) {
+  const paginationContainer = document.getElementById("pagination");
+  paginationContainer.innerHTML = "";
+
+  for (let i = 0; i < totalPages; i++) {
+    const btn = document.createElement("button");
+    btn.textContent = i + 1;
+    btn.className = i === currentPage ? "active-page" : "";
+    btn.onclick = () => {
+      console.log("Page clicked:", i);
+      loadNeeds(i);
+    };
+    paginationContainer.appendChild(btn);
+  }
 }

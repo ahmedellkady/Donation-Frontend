@@ -32,8 +32,10 @@ window.addEventListener("DOMContentLoaded", async () => {
             const publicNeeds = await fetchNeeds();
             needs = publicNeeds.slice(0, 7);
             showMatch = false;
+        } else {
+            needs = needs.slice(0, 7);
         }
-
+        
         if (!needs.length) {
             container.innerHTML = "<p>No suggested or public needs available.</p>";
             return;

@@ -8,9 +8,9 @@ window.addEventListener("DOMContentLoaded", async () => {
     const userJson = localStorage.getItem("user");
     container.innerHTML = "";
 
-    try {
-        let charities = [];
+    let charities = [];
 
+    try {
         if (userJson) {
             const user = JSON.parse(userJson);
             const donorId = user.id;
@@ -18,21 +18,24 @@ window.addEventListener("DOMContentLoaded", async () => {
             if (donorId) {
                 try {
                     charities = await fetchRecommendedCharitiesForDonor(donorId);
-                    const currentPage = window.location.pathname.split("/").pop();
-                    if (currentPage === "index.html") {
-                        charities = charities.slice(0, 7);
-                    }
                 } catch (err) {
-                    console.warn("AI charity model failed. Falling back to static charities.");
+                    console.warn("⚠️ AI recommendation failed. Falling back to general charities.");
                 }
             }
         }
 
-        if (!charities.length) {
-            charities = await fetchCharities();
-            charities = charities.slice(0, 7);
-            // container.innerHTML = "<p>No recommended charities available.</p>";
-            // return;
+        // If AI response is empty or donor not logged in, fallback to general charities (first 7)
+        if (!Array.isArray(charities) || !charities.length) {
+            try {
+                console.log("🔄 Fetching fallback charities (first 7)...");
+                const response = await fetchCharities("", "", 0, 7);
+                charities = response.content; // ✅ Extract the actual list
+                console.log("✅ Fallback charities loaded:", charities);
+            } catch (err) {
+                console.error("❌ Fallback fetchCharities() failed:", err);
+                container.innerHTML = "<p>Failed to load charities.</p>";
+                return;
+            }
         }
 
         charities.forEach(charity => {
@@ -41,7 +44,7 @@ window.addEventListener("DOMContentLoaded", async () => {
         });
 
     } catch (err) {
-        console.error("Error loading charities:", err);
-        container.innerHTML = "<p>Failed to load recommended charities. Please try again later.</p>";
+        console.error("🔥 Unexpected error loading charities:", err);
+        container.innerHTML = "<p>Failed to load charities. Please try again later.</p>";
     }
 });

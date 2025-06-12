@@ -8,7 +8,7 @@ export function renderCharityCard(charity, onClick = null) {
       </div>
       <div class="charity-text-block">
         <h3>${charity.name}</h3>
-        <p>${charity.description}</p>
+        <!--<p>${charity.description}</p>-->
         <p style="color: #347444;">
           <i class="fas fa-map-marker-alt"></i> <strong>${charity.city}</strong>
         </p>

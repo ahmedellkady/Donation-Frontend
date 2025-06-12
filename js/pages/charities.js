@@ -2,6 +2,9 @@ import { fetchCharities } from "../api/charityApi.js";
 import { trackActivity } from "../components/activityTracker.js";
 import { renderCharityCard } from "../components/charityRenderer.js";
 
+let currentPage = 0;
+const pageSize = 10;
+
 document.addEventListener("DOMContentLoaded", () => {
   const container = document.querySelector(".charity-cards");
   const form = document.querySelector(".filter-form");
@@ -31,14 +34,17 @@ async function handleSkipActivity() {
   localStorage.removeItem("charityInteraction");
 }
 
-async function loadCharities(city = "", category = "") {
+async function loadCharities(city = "", category = "", page = 0) {
   const container = document.querySelector(".charity-cards");
+  const pagination = document.getElementById("charity-pagination");
   container.innerHTML = "";
+  pagination.innerHTML = "";
 
   try {
-    const charities = await fetchCharities(city, category);
+    const result = await fetchCharities(city, category, page, pageSize);
+    const charities = result.content;
 
-    if (!charities.length) {
+    if (!charities || charities.length === 0) {
       container.innerHTML = "<p>No charities match your filters.</p>";
       return;
     }
@@ -47,6 +53,8 @@ async function loadCharities(city = "", category = "") {
       const card = renderCharityCard(charity);
       container.appendChild(card);
     });
+
+    renderPagination(result.totalPages, result.number, city, category);
   } catch (err) {
     console.error("Failed to load charities", err);
     container.innerHTML = "<p>Error loading charities.</p>";
@@ -55,4 +63,17 @@ async function loadCharities(city = "", category = "") {
 
 function getInputValue(id) {
   return document.getElementById(id)?.value.trim() || "";
+}
+
+function renderPagination(totalPages, currentPage, city, category) {
+  const pagination = document.getElementById("charity-pagination");
+  pagination.innerHTML = "";
+
+  for (let i = 0; i < totalPages; i++) {
+    const btn = document.createElement("button");
+    btn.textContent = i + 1;
+    btn.className = i === currentPage ? "active-page" : "";
+    btn.onclick = () => loadCharities(city, category, i);
+    pagination.appendChild(btn);
+  }
 }

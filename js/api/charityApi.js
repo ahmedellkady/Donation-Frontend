@@ -1,14 +1,18 @@
 import { BASE_URL } from "../utils/config.js";
 import { apiRequest } from "../utils/apiRequest.js";
 
-export function fetchCharities(city = "", category = "") {
+export async function fetchCharities(city = "", category = "", page = 0, size = 10) {
   let url = `${BASE_URL}/api/charity/filter`;
   const params = [];
   if (city) params.push(`city=${encodeURIComponent(city)}`);
   if (category) params.push(`category=${encodeURIComponent(category)}`);
-  if (params.length) url += `?${params.join('&')}`;
+  params.push(`page=${page}`);
+  params.push(`size=${size}`);
+  url += `?${params.join("&")}`;
 
-  return apiRequest(url);
+  const response = await fetch(url);
+  if (!response.ok) throw new Error("Failed to fetch charities.");
+  return await response.json(); // Must return parsed JSON
 }
 
 export function fetchCharityById(charityId) {

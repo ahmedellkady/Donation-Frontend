@@ -1,12 +1,14 @@
 import { BASE_URL } from "../utils/config.js";
 import { apiRequest } from "../utils/apiRequest.js";
 
-export function fetchNeeds(city = "", category = "", urgency = "") {
+export function fetchNeeds(city = "", category = "", urgency = "", page = 0, size = 10) {
   let url = `${BASE_URL}/api/needs/filter`;
   const params = [];
   if (city) params.push(`city=${encodeURIComponent(city)}`);
   if (category) params.push(`category=${encodeURIComponent(category)}`);
   if (urgency) params.push(`urgency=${encodeURIComponent(urgency)}`);
+  params.push(`page=${page}`);
+  params.push(`size=${size}`);
   if (params.length) url += `?${params.join('&')}`;
 
   return apiRequest(url);
