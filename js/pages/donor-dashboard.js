@@ -3,6 +3,7 @@ import { getDonorId, getDonorName } from "../components/userSession.js";
 import { fetchSuggestedNeedsForDonor } from "../api/needApi.js";
 import { redirectToDonationDetails, redirectToDonate } from "../utils/navigation.js";
 import { fetchDonorFeedbacks } from "../api/feedbackApi.js";
+import { fetchRecommendedCharitiesForDonor } from "../api/charityApi.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
     const donorId = getDonorId();
@@ -37,6 +38,16 @@ document.addEventListener("DOMContentLoaded", async () => {
     } catch (e) {
         console.error("Failed to fetch needs:", e.message);
     }
+
+    try {
+        const recommendedCharities = await fetchRecommendedCharitiesForDonor(donorId);
+        renderRecommendedCharitiesTable(recommendedCharities.slice(0, 5));
+    } catch (err) {
+        console.error("Failed to fetch recommended charities:", err.message);
+        document.getElementById("recommended-charities-body").innerHTML =
+            "<tr><td colspan='3'>Error loading recommended charities.</td></tr>";
+    }
+
 
     try {
         const donorFeedbacks = await fetchDonorFeedbacks(donorId);
@@ -163,6 +174,28 @@ window.confirmCancel = async function () {
         closeModal();
     }
 };
+
+function renderRecommendedCharitiesTable(charities) {
+  const tbody = document.getElementById("recommended-charities-body");
+  if (!tbody) return;
+
+  tbody.innerHTML = "";
+
+  if (!charities.length) {
+    tbody.innerHTML = "<tr><td colspan='3'>No recommended charities found.</td></tr>";
+    return;
+  }
+
+  charities.forEach(charity => {
+    const row = document.createElement("tr");
+    row.innerHTML = `
+      <td>${charity.name}</td>
+      <td>${charity.city}</td>
+      <td><a href="charity.html?id=${charity.id}">View</a></td>
+    `;
+    tbody.appendChild(row);
+  });
+}
 
 function renderDonorFeedbacks(feedbacks) {
     const tbody = document.getElementById("donor-feedbacks-table-body");

@@ -1,16 +1,39 @@
 <nav>
-    <div class="navbar">
+  <div class="navbar">
+    <div class="left-group">
       <div class="logo">Donation</div>
-      <div class="hamburger" id="hamburger">
-        <i class="fas fa-bars"></i>
-      </div>
-      <ul class="nav-links" id="nav-links">
+    </div>
+    <div class="right-group">
+      <!-- Default navigation links (shown when not logged in or donor) -->
+      <ul class="nav-links nav-links-toggle" id="nav-links-default">
         <li><a href="index.html">Home</a></li>
         <li><a href="charities.html">Charities</a></li>
         <li><a href="needs.html">Needs</a></li>
         <li><a href="about.html">About</a></li>
-        <li><a href="contact">Contact</a></li>
+        <li><a href="contact.html">Contact</a></li>
       </ul>
+
+      <!-- Charity-specific navigation links (shown when userType is charity) -->
+      <ul class="nav-links nav-links-toggle" id="nav-links-charity" style="display: none;">
+        <li><a href="post-need.html">Post Need</a></li>
+        <li><a href="all-needs.html">Manage Needs</a></li>
+        <li><a href="all-donations.html">Donations</a></li>
+      </ul>
+
+      <div class="nav-user-actions" id="nav-user-actions" style="display: none;">
+        <a href="#" id="dashboard-link" title="Dashboard">
+          <i class="fas fa-table"></i>
+        </a>
+        <a href="auth.html" id="login-icon" title="Login">
+          <i class="fas fa-sign-in-alt"></i>
+        </a>
+        <a href="#" id="logout-link" title="Logout">
+          <i class="fas fa-sign-out-alt"></i>
+        </a>
+      </div>
+      <div class="hamburger" id="hamburger">
+        <i class="fas fa-bars"></i>
+      </div>
     </div>
-  </nav>
-  
+  </div>
+</nav>
