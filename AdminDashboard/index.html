@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playpen+Sans:wght@400;600&display=swap" rel="stylesheet">
+  <script src="https://kit.fontawesome.com/453f139144.js" crossorigin="anonymous"></script>
+  <!-- <link rel="stylesheet" href="Assets/css/admin.css" /> -->
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Playpen Sans', cursive;
+      background-color: #f7fdf8;
+      color: #222;
+    }
+    .container {
+      display: flex;
+    }
+    .sidebar {
+      width: 240px;
+      background-color: #2e7d32;
+      height: 100vh;
+      padding-top: 20px;
+      position: fixed;
+      top: 0;
+      left: 0;
+    }
+    .sidebar ul {
+      list-style: none;
+      padding: 0;
+    }
+    .sidebar ul li {
+      margin: 20px 0;
+    }
+    .sidebar ul li a {
+      color: #fff;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      padding: 10px 20px;
+      transition: background 0.3s ease;
+    }
+    .sidebar ul li a:hover {
+      background-color: #1b5e20;
+      border-radius: 8px;
+    }
+    .sidebar .title {
+      margin-left: 15px;
+      font-size: 16px;
+    }
+    .main {
+      margin-left: 240px;
+      padding: 30px;
+      flex: 1;
+    }
+    .page-title {
+      font-size: 28px;
+      margin-bottom: 20px;
+      color: #2e7d32;
+    }
+    .btn {
+      background-color: #2e7d32;
+      color: white;
+      padding: 6px 14px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      text-decoration: none;
+    }
+    .btn:hover {
+      background-color: #1b5e20;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background-color: white;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    table thead {
+      background-color: #2e7d32;
+      color: white;
+    }
+    table th, table td {
+      padding: 12px 15px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+    table td a {
+      color: #2e7d32;
+      margin-right: 10px;
+    }
+    .actions i {
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="sidebar">
+      <ul>
+        <li><a href="index.html"><i class="fa-solid fa-table-columns"></i><div class="title">Dashboard</div></a></li>
+        <!-- <li><a href="users.html"><i class="fas fa-users"></i><div class="title">Users</div></a></li> -->
+        <li><a href="donors.html"><i class="fas fa-hand-holding-heart"></i><div class="title">Donors</div></a></li>
+        <li><a href="charities.html"><i class="fas fa-hands-helping"></i><div class="title">Charities</div></a></li>
+        <li><a href="donations.html"><i class="fas fa-donate"></i><div class="title">Donations</div></a></li>
+        <li><a href="logout.html"><i class="fas fa-sign-out-alt"></i><div class="title">Logout</div></a></li>
+      </ul>
+    </div>
+    <div class="main">
+      <h1 class="page-title">Welcome to Admin Panel</h1>
+      <p>Select an item from the sidebar to manage users, donors, charities, and donations.</p>
+    </div>
+  </div>
+</body>
+</html>

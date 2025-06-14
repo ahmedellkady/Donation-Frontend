@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Charities Page</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo&display=swap" rel="stylesheet" />
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: 'Cairo', sans-serif;
+      background: #f5fdf7;
+      color: #0a4d1e;
+      display: flex;
+      min-height: 100vh;
+    }
+    .sidebar {
+      width: 220px;
+      background-color: #0a4d1e;
+      color: white;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .sidebar h2 {
+      font-weight: 700;
+      margin-bottom: 30px;
+      font-size: 22px;
+      border-bottom: 1px solid #35a43e;
+      padding-bottom: 8px;
+    }
+    .sidebar a {
+      color: #a3d18b;
+      text-decoration: none;
+      font-weight: 600;
+      padding: 10px 12px;
+      border-radius: 6px;
+      transition: background-color 0.3s;
+    }
+    .sidebar a:hover {
+      background-color: #35a43e;
+      color: white;
+    }
+    .main-content {
+      flex-grow: 1;
+      padding: 30px 40px;
+    }
+    h2.page-title {
+      margin-bottom: 25px;
+      font-size: 28px;
+      border-bottom: 3px solid #0a4d1e;
+      padding-bottom: 8px;
+      max-width: 300px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 30px;
+    }
+    th, td {
+      border: 1px solid #0a4d1e;
+      padding: 10px 15px;
+      text-align: center;
+    }
+    th {
+      background-color: #0a4d1e;
+      color: white;
+      font-weight: 700;
+    }
+    tbody tr:nth-child(even) {
+      background-color: #e2f0db;
+    }
+    button {
+      background-color: #0a4d1e;
+      color: white;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: background-color 0.3s;
+    }
+    button:hover {
+      background-color: #35a43e;
+    }
+    form {
+      max-width: 100%;
+      background: white;
+      padding: 15px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px #a9d18e66;
+    }
+    form table {
+      width: 100%;
+      border: none;
+    }
+    form td {
+      border: none;
+      padding: 8px 10px;
+    }
+    input[type="text"], input[type="email"], input[type="password"] {
+      width: 100%;
+      padding: 6px 8px;
+      border: 1px solid #0a4d1e;
+      border-radius: 4px;
+      font-size: 14px;
+      font-weight: 600;
+      color: #0a4d1e;
+    }
+    input::placeholder {
+      font-weight: 400;
+      color: #5b7a42;
+    }
+    select {
+      padding: 6px 10px;
+      border: 1px solid #0a4d1e;
+      border-radius: 4px;
+      background-color: white;
+      color: #0a4d1e;
+      font-weight: 600;
+      cursor: pointer;
+      transition: border-color 0.3s;
+    }
+    select:focus {
+      outline: none;
+      border-color: #35a43e;
+      background-color: #e2f0db;
+    }
+    .toast {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      padding: 10px 20px;
+      background-color: #0a4d1e;
+      color: white;
+      border-radius: 5px;
+      opacity: 0;
+      transition: opacity 0.5s ease-in-out;
+      z-index: 9999;
+    }
+    .toast.show {
+      opacity: 1;
+    }
+    @media (max-width: 700px) {
+      body {
+        flex-direction: column;
+      }
+      .sidebar {
+        width: 100%;
+        flex-direction: row;
+        justify-content: space-around;
+      }
+      .main-content {
+        padding: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="toast" id="toast"></div>
+
+  <nav class="sidebar">
+    <h2>Dashboard</h2>
+    <a href="donors.html">Donors</a>
+    <a href="charities.html">Charities</a>
+    <a href="donations.html">Donations</a>
+    <a href="feedbacks.html">Feedbacks</a>
+  </nav>
+
+  <main class="main-content">
+    <h2 class="page-title">Charities List</h2>
+
+    <table id="charities-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Phone</th>
+          <th>City</th>
+          <th>Documents</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+    <br>
+    <div id="pagination-controls" style="margin-bottom: 20px; text-align: center;"></div>
+    
+    <h3>Edit Charity</h3>
+    <form id="edit-charity-form">
+      <table>
+        <tr>
+          <td><input type="text" name="id" placeholder="ID" required readonly></td>
+          <td><input type="text" name="name" placeholder="Name" required></td>
+          <td><input type="email" name="email" placeholder="Email" required></td>
+          <td><input type="text" name="phone" placeholder="Phone" required></td>
+          <td><input type="text" name="city" placeholder="City"></td>
+          <td><button type="submit">Save</button></td>
+        </tr>
+      </table>
+    </form>
+
+    <h3>Add New Charity</h3>
+    <form id="add-charity-form">
+      <table>
+        <tr>
+          <td><input type="text" name="name" placeholder="Name" required></td>
+          <td><input type="email" name="email" placeholder="Email" required></td>
+          <td><input type="text" name="phone" placeholder="Phone" required></td>
+          <td><input type="text" name="city" placeholder="City"></td>
+          <td><input type="password" name="password" placeholder="Password" required></td>
+          <td>
+            <select name="status" required>
+              <option value="PENDING">PENDING</option>
+              <option value="APPROVED">APPROVED</option>
+              <option value="REJECTED">REJECTED</option>
+            </select>
+          </td>
+          <td><button type="submit">Add</button></td>
+        </tr>
+      </table>
+    </form>
+  </main>
+
+<script>
+  // Toast notification function
+  function showToast(message, success = true) {
+    const toast = document.getElementById("toast");
+    toast.innerText = message;
+    toast.style.backgroundColor = success ? "#0a4d1e" : "#a94442";
+    toast.classList.add("show");
+    setTimeout(() => toast.classList.remove("show"), 3000);
+  }
+
+  let currentPage = 1;
+  const rowsPerPage = 5;
+  let charities = [];
+
+  document.addEventListener('DOMContentLoaded', function() {
+    loadCharities();
+    setupFormListeners();
+    highlightCharityIfExists();
+  });
+
+  function loadCharities() {
+    fetch('http://localhost:8080/api/admins/charities')
+      .then(response => {
+        if (!response.ok) throw new Error('Network error');
+        return response.json();
+      })
+      .then(data => {
+        charities = data;
+        renderTablePage(currentPage);
+      })
+      .catch(error => {
+        console.error('Error fetching data:', error);
+        showToast("Failed to load charities data", false);
+      });
+  }
+
+  function renderTablePage(page) {
+    const tbody = document.querySelector("#charities-table tbody");
+    tbody.innerHTML = "";
+
+    const start = (page - 1) * rowsPerPage;
+    const end = start + rowsPerPage;
+    const pageData = charities.slice(start, end);
+
+    if (pageData.length === 0) {
+      const row = document.createElement("tr");
+      row.innerHTML = `<td colspan="8" style="text-align: center;">No charities found</td>`;
+      tbody.appendChild(row);
+    } else {
+      pageData.forEach(charity => {
+        const row = document.createElement("tr");
+
+        // Status dropdown
+        const statusSelect = document.createElement("select");
+        ["PENDING", "APPROVED", "REJECTED"].forEach(status => {
+          const option = document.createElement("option");
+          option.value = status;
+          option.textContent = status;
+          if (charity.status === status) option.selected = true;
+          statusSelect.appendChild(option);
+        });
+
+        statusSelect.addEventListener("change", () => {
+          updateCharityStatus(charity.id, statusSelect.value);
+        });
+
+        row.innerHTML = `
+          <td>${charity.id}</td>
+          <td>${charity.name}</td>
+          <td>${charity.email}</td>
+          <td>${charity.phone}</td>
+          <td>${charity.city || '-'}</td>
+          <td>${charity.uploadedDocuments || '-'}</td>
+          <td></td>
+          <td><button class="edit-btn">Edit</button></td>
+        `;
+
+        row.querySelector("td:nth-child(7)").appendChild(statusSelect);
+
+        row.querySelector(".edit-btn").addEventListener("click", () => {
+          populateEditForm(charity);
+        });
+
+        tbody.appendChild(row);
+      });
+    }
+
+    renderPaginationControls();
+    highlightCharityIfExists();
+  }
+
+  function updateCharityStatus(id, newStatus) {
+    fetch(`http://localhost:8080/api/admins/edit-charity/${id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ status: newStatus })
+    })
+    .then(response => {
+      if (!response.ok) throw new Error('Failed to update');
+      return response.json();
+    })
+    .then(result => {
+      showToast("Status updated successfully!");
+      const charity = charities.find(c => c.id === id);
+      if (charity) charity.status = newStatus;
+    })
+    .catch(error => {
+      console.error(error);
+      showToast("Failed to update status", false);
+    });
+  }
+
+  function populateEditForm(charity) {
+    const form = document.getElementById("edit-charity-form");
+    form.querySelector('input[name="id"]').value = charity.id;
+    form.querySelector('input[name="name"]').value = charity.name;
+    form.querySelector('input[name="email"]').value = charity.email;
+    form.querySelector('input[name="phone"]').value = charity.phone;
+    form.querySelector('input[name="city"]').value = charity.city || '';
+    form.scrollIntoView({ behavior: 'smooth' });
+  }
+
+  function renderPaginationControls() {
+    const totalPages = Math.ceil(charities.length / rowsPerPage);
+    const container = document.getElementById("pagination-controls");
+    container.innerHTML = "";
+
+    if (totalPages <= 1) return;
+
+    const prevBtn = document.createElement("button");
+    prevBtn.textContent = "Previous";
+    prevBtn.disabled = currentPage === 1;
+    prevBtn.addEventListener("click", () => {
+      if (currentPage > 1) {
+        currentPage--;
+        renderTablePage(currentPage);
+      }
+    });
+    container.appendChild(prevBtn);
+
+    for (let i = 1; i <= totalPages; i++) {
+      const pageBtn = document.createElement("button");
+      pageBtn.textContent = i;
+      pageBtn.disabled = i === currentPage;
+      pageBtn.addEventListener("click", () => {
+        currentPage = i;
+        renderTablePage(currentPage);
+      });
+      container.appendChild(pageBtn);
+    }
+
+    const nextBtn = document.createElement("button");
+    nextBtn.textContent = "Next";
+    nextBtn.disabled = currentPage === totalPages;
+    nextBtn.addEventListener("click", () => {
+      if (currentPage < totalPages) {
+        currentPage++;
+        renderTablePage(currentPage);
+      }
+    });
+    container.appendChild(nextBtn);
+  }
+
+  function setupFormListeners() {
+    document.getElementById("edit-charity-form").addEventListener("submit", function(e) {
+      e.preventDefault();
+      const id = this.querySelector('input[name="id"]').value;
+      const updatedData = {
+        name: this.querySelector('input[name="name"]').value,
+        email: this.querySelector('input[name="email"]').value,
+        phone: this.querySelector('input[name="phone"]').value,
+        city: this.querySelector('input[name="city"]').value || null
+      };
+      updateCharity(id, updatedData);
+    });
+
+    document.getElementById("add-charity-form").addEventListener("submit", function(e) {
+      e.preventDefault();
+      const newCharity = {
+        name: this.querySelector('input[name="name"]').value,
+        email: this.querySelector('input[name="email"]').value,
+        phone: this.querySelector('input[name="phone"]').value,
+        city: this.querySelector('input[name="city"]').value || null,
+        password: this.querySelector('input[name="password"]').value,
+        status: this.querySelector('select[name="status"]').value
+      };
+      addCharity(newCharity);
+    });
+  }
+
+  function updateCharity(id, updatedData) {
+    fetch(`http://localhost:8080/api/admins/edit-charity/${id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(updatedData)
+    })
+    .then(response => {
+      if (!response.ok) throw new Error('Update failed');
+      return response.json();
+    })
+    .then(result => {
+      showToast("Charity updated successfully!");
+      const index = charities.findIndex(c => c.id == id);
+      if (index !== -1) {
+        charities[index] = { ...charities[index], ...updatedData };
+        renderTablePage(currentPage);
+      }
+    })
+    .catch(error => {
+      console.error(error);
+      showToast("Failed to update charity", false);
+    });
+  }
+
+  function addCharity(newCharity) {
+    fetch('http://localhost:8080/api/admins/add-charity', {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(newCharity)
+    })
+    .then(response => {
+      if (!response.ok) throw new Error('Add failed');
+      return response.json();
+    })
+    .then(addedCharity => {
+      showToast("Charity added successfully!");
+      charities.unshift(addedCharity);
+      currentPage = 1;
+      renderTablePage(currentPage);
+      document.getElementById("add-charity-form").reset();
+    })
+    .catch(error => {
+      console.error(error);
+      showToast("Failed to add charity", false);
+    });
+  }
+
+  function highlightCharityIfExists() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const highlightName = urlParams.get("highlight");
+    if (!highlightName) return;
+
+    document.querySelectorAll("#charities-table tbody tr").forEach(row => {
+      const nameCell = row.querySelector("td:nth-child(2)");
+      if (nameCell && nameCell.innerText === highlightName) {
+        row.style.backgroundColor = '#14532d'; // أخضر غامق
+        row.style.color = 'white';
+        nameCell.querySelector("a").style.color = "green";
+      }
+    });
+  }
+</script>
+
+</body>
+</html>

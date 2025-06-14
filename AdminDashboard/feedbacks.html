@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Feedbacks Page</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo&display=swap" rel="stylesheet" />
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0; padding: 0;
+    }
+    body {
+      font-family: 'Cairo', sans-serif;
+      background: #f5fdf7;
+      color: #0a4d1e;
+      display: flex;
+      min-height: 100vh;
+    }
+    .sidebar {
+      width: 220px;
+      background-color: #0a4d1e;
+      color: white;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .sidebar h2 {
+      font-weight: 700;
+      margin-bottom: 30px;
+      font-size: 22px;
+      border-bottom: 1px solid #35a43e;
+      padding-bottom: 8px;
+    }
+    .sidebar a {
+      color: #a3d18b;
+      text-decoration: none;
+      font-weight: 600;
+      padding: 10px 12px;
+      border-radius: 6px;
+      transition: background-color 0.3s;
+    }
+    .sidebar a:hover {
+      background-color: #35a43e;
+      color: white;
+    }
+    .main-content {
+      flex-grow: 1;
+      padding: 30px 40px;
+    }
+    h2.page-title {
+      margin-bottom: 25px;
+      font-size: 28px;
+      border-bottom: 3px solid #0a4d1e;
+      padding-bottom: 8px;
+      max-width: 350px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 30px;
+    }
+    th, td {
+      border: 1px solid #0a4d1e;
+      padding: 10px 15px;
+      text-align: center;
+    }
+    th {
+      background-color: #0a4d1e;
+      color: white;
+      font-weight: 700;
+    }
+    tbody tr:nth-child(even) {
+      background-color: #e2f0db;
+    }
+    .urgent-row {
+      background-color: #ff4d4d !important;
+      color: white;
+      font-weight: bold;
+    }
+    .urgent-row:hover {
+      background-color: #ff9999 !important;
+      color: #000;
+    }
+    .check-btn {
+      background-color: #0d6efd; /* أزرق فاتح */
+      color: white;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+      text-decoration: none;
+      transition: background-color 0.3s;
+    }
+    .check-btn:hover {
+      background-color: #0a58ca;
+    }
+    @media (max-width: 700px) {
+      body {
+        flex-direction: column;
+      }
+      .sidebar {
+        width: 100%;
+        flex-direction: row;
+        justify-content: space-around;
+      }
+      .main-content {
+        padding: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav class="sidebar">
+    <h2>Dashboard</h2>
+    <a href="donors.html">Donors</a>
+    <a href="charities.html">Charities</a>
+    <a href="donations.html">Donations</a>
+    <a href="feedbacks.html">Feedbacks</a>
+  </nav>
+
+  <main class="main-content">
+    <h2 class="page-title">Feedback List</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Rating</th>
+          <th>Comment</th>
+          <th>From</th>
+          <th>Donation</th>
+        </tr>
+      </thead>
+      <tbody id="feedback-body">
+        <!-- Feedback rows will be injected here -->
+      </tbody>
+    </table>
+  </main>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", async () => {
+      try {
+        const res = await fetch("http://localhost:8080/api/admins/feedbacks");
+        const feedbacks = await res.json();
+
+        const tbody = document.getElementById("feedback-body");
+        tbody.innerHTML = "";
+
+        feedbacks.forEach(fb => {
+          const tr = document.createElement("tr");
+
+          // إذا كان التقييم عاجل، نضع تنسيق خاص للصف
+          if (fb.isUrgent === 1) {
+            tr.classList.add("urgent-row");
+          }
+
+          const fromRole = fb.forRole === "DONOR" ? "Donor" : "Charity";
+
+          tr.innerHTML = `
+            <td>${fb.donationId}</td>
+            <td>${fb.rating}</td>
+            <td>${fb.comment}</td>
+            <td>${fromRole}</td>
+            <td><a class="check-btn" href="donations.html?highlight=${fb.donationId}">Check Donation</a></td>
+          `;
+
+          tbody.appendChild(tr);
+        });
+
+      } catch (err) {
+        console.error("Failed to load feedbacks", err);
+      }
+    });
+  </script>
+</body>
+</html>

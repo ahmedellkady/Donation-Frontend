@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Donations Page</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo&display=swap" rel="stylesheet" />
+  <style>
+    /* نفس ستايل users.html */
+    * {
+      box-sizing: border-box;
+      margin: 0; padding: 0;
+    }
+    body {
+      font-family: 'Cairo', sans-serif;
+      background: #f5fdf7;
+      color: #0a4d1e;
+      display: flex;
+      min-height: 100vh;
+    }
+    .sidebar {
+      width: 220px;
+      background-color: #0a4d1e;
+      color: white;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .sidebar h2 {
+      font-weight: 700;
+      margin-bottom: 30px;
+      font-size: 22px;
+      border-bottom: 1px solid #35a43e;
+      padding-bottom: 8px;
+    }
+    .sidebar a {
+      color: #a3d18b;
+      text-decoration: none;
+      font-weight: 600;
+      padding: 10px 12px;
+      border-radius: 6px;
+      transition: background-color 0.3s;
+    }
+    .sidebar a:hover {
+      background-color: #35a43e;
+      color: white;
+    }
+    .main-content {
+      flex-grow: 1;
+      padding: 30px 40px;
+    }
+    h2.page-title {
+      margin-bottom: 25px;
+      font-size: 28px;
+      border-bottom: 3px solid #0a4d1e;
+      padding-bottom: 8px;
+      max-width: 350px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 30px;
+    }
+    th, td {
+      border: 1px solid #0a4d1e;
+      padding: 10px 15px;
+      text-align: center;
+    }
+    th {
+      background-color: #0a4d1e;
+      color: white;
+      font-weight: 700;
+    }
+    tbody tr:nth-child(even) {
+      background-color: #e2f0db;
+    }
+    button {
+      background-color: #0a4d1e;
+      color: white;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: background-color 0.3s;
+    }
+    button:hover {
+      background-color: #35a43e;
+    }
+    form {
+      max-width: 100%;
+      background: white;
+      padding: 15px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px #a9d18e66;
+    }
+    form table {
+      width: 100%;
+      border: none;
+    }
+    form td {
+      border: none;
+      padding: 8px 10px;
+    }
+    select, input[type="number"], input[type="date"] {
+      width: 100%;
+      padding: 6px 8px;
+      border: 1px solid #0a4d1e;
+      border-radius: 4px;
+      font-size: 14px;
+      font-weight: 600;
+      color: #000000;
+    }
+    @media (max-width: 700px) {
+      body {
+        flex-direction: column;
+      }
+      .sidebar {
+        width: 100%;
+        flex-direction: row;
+        justify-content: space-around;
+      }
+      .main-content {
+        padding: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav class="sidebar">
+    <h2>Dashboard</h2>
+    <!-- <a href="users.html">Users</a> -->
+    <a href="donors.html">Donors</a>
+    <a href="charities.html">Charities</a>
+    <a href="donations.html">Donations</a>
+    <a href="feedbacks.html">Feedbacks</a>
+  </nav>
+
+  <main class="main-content">
+    <h2 class="page-title">Donations List</h2>
+
+    <table>
+      <thead>
+      <tr>
+        <th>ID</th>
+        <th>Donor Name</th>
+        <th>Charity Name</th>
+        <th>Amount (EGP)</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+
+      <tbody>
+      </tbody>
+    </table>
+  </main>
+<script>
+  document.addEventListener("DOMContentLoaded", async () => {
+    const statuses = ["PENDING", "SCHEDULED", "PICKED_UP", "DELIVERED", "CANCELED"];
+    const urlParams = new URLSearchParams(window.location.search);
+    const highlightId = urlParams.get("highlight");
+    const highlightDonor = urlParams.get("highlightDonor");
+    const highlightCharity = urlParams.get("highlightCharity");
+
+    try {
+      const donationsRes = await fetch("http://localhost:8080/api/admins/donations");
+      const donations = await donationsRes.json();
+
+      const tbody = document.querySelector("tbody");
+      tbody.innerHTML = "";
+
+      donations.forEach(donation => {
+        const tr = document.createElement("tr");
+
+        const donorName = donation.donorName || "N/A";
+        const charityName = donation.charityName || "N/A";
+
+        // Create status dropdown
+        const statusSelect = document.createElement("select");
+        statuses.forEach(s => {
+          const option = document.createElement("option");
+          option.value = s;
+          option.textContent = s;
+          if (s === donation.status) option.selected = true;
+          statusSelect.appendChild(option);
+        });
+
+        statusSelect.addEventListener("change", async () => {
+          const confirmed = confirm("Are you sure you want to update the status?");
+          if (!confirmed) {
+            statusSelect.value = donation.status;
+            return;
+          }
+
+          try {
+            const response = await fetch(`http://localhost:8080/api/admins/donations/${donation.id}/status`, {
+              method: "PUT",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ status: statusSelect.value })
+            });
+
+            if (response.ok) {
+              alert("Donation status updated successfully ✅");
+              donation.status = statusSelect.value;
+            } else {
+              throw new Error("Failed to update status");
+            }
+          } catch (err) {
+            console.error("Error updating status", err);
+            alert("❌ Failed to update status. Please try again.");
+            statusSelect.value = donation.status;
+          }
+        });
+
+        const tdStatus = document.createElement("td");
+        tdStatus.appendChild(statusSelect);
+
+        // Build table row with green-colored links to other pages
+        tr.innerHTML = `
+          <td>${donation.id}</td>
+          <td><a href="donors.html?highlight=${encodeURIComponent(donorName)}" class="link" style="color: BLACK;">${donorName}</a></td>
+          <td><a href="charities.html?highlight=${encodeURIComponent(charityName)}" class="link" style="color: BLACK;">${charityName}</a></td>
+          <td>${donation.quantity}</td>
+        `;
+        tr.appendChild(tdStatus);
+
+        // Highlight if necessary (still used if URL manually passed)
+        const shouldHighlight =
+          (highlightId && donation.id == highlightId) ||
+          (highlightDonor && donorName === highlightDonor) ||
+          (highlightCharity && charityName === highlightCharity);
+
+        if (shouldHighlight) {
+          tr.style.backgroundColor = "#14532d";
+          tr.style.color = "white";
+          setTimeout(() => {
+            tr.scrollIntoView({ behavior: "smooth", block: "center" });
+          }, 300);
+        }
+
+        tbody.appendChild(tr);
+      });
+    } catch (error) {
+      console.error("Failed to load donations:", error);
+    }
+  });
+</script>
+
+
+
+
+</body>
+</html>

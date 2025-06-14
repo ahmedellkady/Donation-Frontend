@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Donors List</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo&display=swap" rel="stylesheet" />
+  <style>
+    /* نفس الستايل اللي استخدمناه */
+    * {
+      box-sizing: border-box;
+      margin: 0; padding: 0;
+    }
+    body {
+      font-family: 'Cairo', sans-serif;
+      background: #f5fdf7;
+      color: #0a4d1e;
+      display: flex;
+      min-height: 100vh;
+    }
+    .sidebar {
+      width: 220px;
+      background-color: #0a4d1e;
+      color: white;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .sidebar h2 {
+      font-weight: 700;
+      margin-bottom: 30px;
+      font-size: 22px;
+      border-bottom: 1px solid #35a43e;
+      padding-bottom: 8px;
+    }
+    .sidebar a {
+      color: #a3d18b;
+      text-decoration: none;
+      font-weight: 600;
+      padding: 10px 12px;
+      border-radius: 6px;
+      transition: background-color 0.3s;
+    }
+    .sidebar a:hover {
+      background-color: #35a43e;
+      color: white;
+    }
+    .main-content {
+      flex-grow: 1;
+      padding: 30px 40px;
+    }
+    h2.page-title {
+      margin-bottom: 25px;
+      font-size: 28px;
+      border-bottom: 3px solid #0a4d1e;
+      padding-bottom: 8px;
+      max-width: 300px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 30px;
+    }
+    th, td {
+      border: 1px solid #0a4d1e;
+      padding: 10px 15px;
+      text-align: center;
+    }
+    th {
+      background-color: #0a4d1e;
+      color: white;
+      font-weight: 700;
+    }
+    tbody tr:nth-child(even) {
+      background-color: #e2f0db;
+    }
+    button {
+      background-color: #0a4d1e;
+      color: white;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: background-color 0.3s;
+      margin: 2px;
+    }
+    button:hover {
+      background-color: #35a43e;
+    }
+    form {
+      max-width: 100%;
+      background: white;
+      padding: 15px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px #a9d18e66;
+      margin-bottom: 40px;
+    }
+    form table {
+      width: 100%;
+      border: none;
+    }
+    form td {
+      border: none;
+      padding: 8px 10px;
+    }
+    input[type="text"], input[type="email"], input[type="password"], select {
+      width: 100%;
+      padding: 6px 8px;
+      border: 1px solid #0a4d1e;
+      border-radius: 4px;
+      font-size: 14px;
+      font-weight: 600;
+      color: #0a4d1e;
+    }
+    input[type="text"]::placeholder,
+    input[type="email"]::placeholder,
+    input[type="password"]::placeholder {
+      font-weight: 400;
+      color: #5b7a42;
+    }
+    @media (max-width: 700px) {
+      body {
+        flex-direction: column;
+      }
+      .sidebar {
+        width: 100%;
+        flex-direction: row;
+        justify-content: space-around;
+      }
+      .main-content {
+        padding: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="sidebar">
+    <h2>Dashboard</h2>
+    <!-- <a href="users.html">Users</a> -->
+    <a href="donors.html" style="background-color:#35a43e; color:#fff; border-radius:6px;">Donors</a>
+    <a href="charities.html">Charities</a>
+    <a href="donations.html">Donations</a>
+    <a href="feedbacks.html">Feedbacks</a>
+  </nav>
+
+  <main class="main-content">
+    <h2 class="page-title">Donors List</h2>
+
+    <form id="add-donor-form">
+      <table>
+        <tr>
+          <td><input type="text" name="name" placeholder="Name" required /></td>
+          <td><input type="email" name="email" placeholder="Email" required /></td>
+          <td><input type="text" name="phone" placeholder="Phone" required /></td>
+          <td><input type="text" name="city" placeholder="City" required /></td>
+          <td><input type="text" name="neighborhood" placeholder="Neighborhood" required /></td>
+          <td><input type="password" name="password" placeholder="Password" required /></td>
+          <td><button type="submit">Add Donor</button></td>
+        </tr>
+      </table>
+    </form>
+
+    <table id="donors-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Phone</th>
+          <th>City</th>
+          <th>Neighborhood</th>
+          <th>Registered At</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- donors data will go here -->
+      </tbody>
+    </table>
+  </main>
+
+<script>
+  const apiUrl = 'http://localhost:8080/api/admins';
+
+  // استخراج اسم المتبرع المطلوب تظليله من URL أو من localStorage
+  const urlParams = new URLSearchParams(window.location.search);
+  let highlightedName = urlParams.get('highlight');
+
+  if (!highlightedName) {
+    highlightedName = localStorage.getItem('highlightedDonorName');
+  }
+
+  function fetchDonors() {
+    fetch(apiUrl + '/donors')
+      .then(res => {
+        if (!res.ok) throw new Error("Network response not ok");
+        return res.json();
+      })
+      .then(data => {
+        const tbody = document.querySelector("#donors-table tbody");
+        tbody.innerHTML = '';
+        data.forEach(donor => {
+          const tr = document.createElement('tr');
+
+          // التظليل بناءً على الاسم
+          if (highlightedName && donor.name === highlightedName) {
+            tr.style.backgroundColor = '#14532d'; // أخضر غامق
+            tr.style.color = 'white';
+          }
+
+          tr.innerHTML = `
+            <td>${donor.id}</td>
+            <td>${donor.name}</td>
+            <td>${donor.email}</td>
+            <td>${donor.phone}</td>
+            <td>${donor.city}</td>
+            <td>${donor.neighborhood}</td>
+            <td>${new Date(donor.registeredAt).toLocaleString()}</td>
+            <td>
+              <button onclick="editDonor(${donor.id})">Edit</button>
+              <button onclick="deleteDonor(${donor.id})">Delete</button>
+            </td>
+          `;
+          tbody.appendChild(tr);
+        });
+
+        // تنظيف localStorage بعد الاستخدام
+        localStorage.removeItem('highlightedDonorName');
+      })
+      .catch(err => {
+        console.error(err);
+        alert("Failed to load donors. Please check backend and CORS.");
+      });
+  }
+
+  // Call fetchDonors at page load
+  fetchDonors();
+
+  // Add donor form handling
+  document.getElementById('add-donor-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const formData = new FormData(this);
+    const newDonor = {
+      name: formData.get('name').trim(),
+      email: formData.get('email').trim(),
+      phone: formData.get('phone').trim(),
+      city: formData.get('city').trim(),
+      neighborhood: formData.get('neighborhood').trim(),
+      password: formData.get('password')
+    };
+
+    fetch(apiUrl + '/add-donor', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(newDonor)
+    })
+    .then(res => {
+      if (!res.ok) throw new Error("Failed to add donor");
+      return res.json();
+    })
+    .then(data => {
+      if (data === true) {
+        alert('Donor added successfully!');
+        this.reset();
+        fetchDonors();
+      } else {
+        throw new Error("Server returned false");
+      }
+    })
+    .catch(err => {
+      console.error(err);
+      alert('Failed to add donor.');
+    });
+  });
+
+  // Delete donor
+  function deleteDonor(id) {
+    if (!confirm('Are you sure you want to delete this donor?')) return;
+
+    fetch(`${apiUrl}/delete-donor/${id}`, { method: 'DELETE' })
+      .then(res => {
+        if (!res.ok) throw new Error("Failed to delete donor");
+        return res.json();
+      })
+      .then(data => {
+        if (data === true) {
+          alert('Donor deleted successfully!');
+          fetchDonors();
+        } else {
+          throw new Error("Server returned false");
+        }
+      })
+      .catch(err => {
+        console.error(err);
+        alert('Failed to delete donor.');
+      });
+  }
+
+  // Edit donor (simplified prompt approach)
+  function editDonor(id) {
+    // Find donor data from current table
+    const row = [...document.querySelectorAll("#donors-table tbody tr")]
+      .find(tr => tr.firstElementChild.textContent == id);
+
+    if (!row) return alert("Donor row not found.");
+
+    // Get current values
+    const name = prompt("Name:", row.children[1].textContent);
+    if (name === null) return;
+
+    const email = prompt("Email:", row.children[2].textContent);
+    if (email === null) return;
+
+    const phone = prompt("Phone:", row.children[3].textContent);
+    if (phone === null) return;
+
+    const city = prompt("City:", row.children[4].textContent);
+    if (city === null) return;
+
+    const neighborhood = prompt("Neighborhood:", row.children[5].textContent);
+    if (neighborhood === null) return;
+
+    const password = prompt("Password (leave empty to keep current):");
+    if (password === null) return;
+
+    const updatedDonor = {
+      name: name.trim(),
+      email: email.trim(),
+      phone: phone.trim(),
+      city: city.trim(),
+      neighborhood: neighborhood.trim(),
+      password: password ? password.trim() : undefined
+    };
+
+    fetch(`${apiUrl}/edit-donor/${id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(updatedDonor)
+    })
+    .then(res => {
+      if (!res.ok) throw new Error("Failed to update donor");
+      return res.json();
+    })
+    .then(data => {
+      if (data === true) {
+        alert('Donor updated successfully!');
+        fetchDonors();
+      } else {
+        throw new Error("Server returned false");
+      }
+    })
+    .catch(err => {
+      console.error(err);
+      alert('Failed to update donor.');
+    });
+  }
+</script>
+
+
+</body>
+</html>
